@@ -11,10 +11,22 @@ The following are required in order to build this project (in case any are missi
 * ArduinoJson >= 5.13.0 (see [bblanchon/ArduinoJson](https://github.com/bblanchon/ArduinoJson))
 * A4988 StepperDriver (is copied here from [laurb9/StepperDriver](https://github.com/laurb9/StepperDriver))
 
-# Clone/Checkout
+# Clone
 
 Simply use the standard clone command
 
 ```{.sh}
 git clone https://github.com/JonathanSchmalhofer/WatchWinderESP8266.git
 ```
+
+# License on StepperDriver (A4988)
+
+The following files have been copied from [laurb9/StepperDriver](https://github.com/laurb9/StepperDriver) from Laurentiu Badea:
+
+```{.sh}
+BasicStepperDriver.h
+BasicStepperDriver.cpp
+A4988.h
+A4988.cpp
+```
+
