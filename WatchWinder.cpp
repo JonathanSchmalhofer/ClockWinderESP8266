@@ -10,12 +10,12 @@ WatchWinder::WatchWinder()
     : wifi_manager_(),
       save_config_(false)
 {
-  strcpy(mqtt_port_, "8080");
-  strcpy(blynk_token_, "YOUR_BLYNK_TOKEN");
-  
-  strcpy(static_ip_, "10.0.1.56");
-  strcpy(static_gw_, "10.0.1.1");
-  strcpy(static_sn_, "255.255.255.0");
+	strcpy(mqtt_port_, "8080");
+	strcpy(blynk_token_, "YOUR_BLYNK_TOKEN");
+
+	strcpy(static_ip_, "10.0.1.56");
+	strcpy(static_gateway_, "10.0.1.1");
+	strcpy(static_subnet_, "255.255.255.0");
 }
 
 void WatchWinder::Setup()
@@ -45,8 +45,8 @@ void WatchWinder::Setup()
 					if(json["ip"])
 					{
 						strcpy(static_ip_, json["ip"]);
-						strcpy(static_gw_, json["gateway"]);
-						strcpy(static_sn_, json["subnet"]);
+						strcpy(static_gateway_, json["gateway"]);
+						strcpy(static_subnet_, json["subnet"]);
 					}
 					else
 					{
