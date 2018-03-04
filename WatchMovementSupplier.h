@@ -6,8 +6,7 @@
 #ifndef WATCHMOVEMENTSUPPLIER_H
 #define WATCHMOVEMENTSUPPLIER_H
 
-#include "A4988.h"
-#include "WatchRequirement.h"
+#include "StepperWithWatchRequirements.h"
 
 typedef std::pair<std::vector<WatchRequirement>, A4988> StepperWithRequirements;
 
