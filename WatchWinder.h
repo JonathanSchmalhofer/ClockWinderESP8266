@@ -22,8 +22,8 @@ class WatchWinder
 public:
     WatchWinder();
 	
-	  void Setup();
-	  void Step();
+	void Setup();
+	void Step();
     void SaveConfigCallback();
 private:
     WiFiManager wifi_manager_;

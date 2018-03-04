@@ -22,49 +22,49 @@ void WatchWinder::Setup()
 {
     if (SPIFFS.begin())
     {
-      if (SPIFFS.exists("/config.json"))
-      {
-        //file exists, reading and loading
-        File configFile = SPIFFS.open("/config.json", "r");
-        if (configFile)
-        {
-          size_t size = configFile.size();
-          // Allocate a buffer to store contents of the file.
-          std::unique_ptr<char[]> buf(new char[size]);
-    
-          configFile.readBytes(buf.get(), size);
-          DynamicJsonBuffer jsonBuffer;
-          JsonObject& json = jsonBuffer.parseObject(buf.get());
-          json.printTo(Serial);
-          if (json.success())
-          {
-            strcpy(mqtt_server_, json["mqtt_server"]);
-            strcpy(mqtt_port_, json["mqtt_port"]);
-            strcpy(blynk_token_, json["blynk_token"]);
-    
-            if(json["ip"])
-            {
-              strcpy(static_ip_, json["ip"]);
-              strcpy(static_gw_, json["gateway"]);
-              strcpy(static_sn_, json["subnet"]);
-            }
-            else
-            {
-              // Serial.println("no custom ip in config");
-            }
-          }
-          else
-          {
-            // Serial.println("failed to load json config");
-          }
-        }
-      }
+		if (SPIFFS.exists("/config.json"))
+		{
+		//file exists, reading and loading
+		File configFile = SPIFFS.open("/config.json", "r");
+		if (configFile)
+		{
+			size_t size = configFile.size();
+			// Allocate a buffer to store contents of the file.
+			std::unique_ptr<char[]> buf(new char[size]);
+
+			configFile.readBytes(buf.get(), size);
+			DynamicJsonBuffer jsonBuffer;
+			JsonObject& json = jsonBuffer.parseObject(buf.get());
+			json.printTo(Serial);
+				if (json.success())
+				{
+					strcpy(mqtt_server_, json["mqtt_server"]);
+					strcpy(mqtt_port_, json["mqtt_port"]);
+					strcpy(blynk_token_, json["blynk_token"]);
+
+					if(json["ip"])
+					{
+						strcpy(static_ip_, json["ip"]);
+						strcpy(static_gw_, json["gateway"]);
+						strcpy(static_sn_, json["subnet"]);
+					}
+					else
+					{
+						// Serial.println("no custom ip in config");
+					}
+				}
+				else
+				{
+					// Serial.println("failed to load json config");
+				}
+			}
+		}
     }
     else
     {
-      // Serial.println("failed to mount FS");
+		// Serial.println("failed to mount FS");
     }
-    // first parameter is name of access point, second is the password
+	// first parameter is name of access point, second is the password
     wifi_manager_.autoConnect("WatchWinderESP8266", "watchwinder");
 }
 
