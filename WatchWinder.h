@@ -17,7 +17,7 @@
 
 #include <ArduinoJson.h>          // https://github.com/bblanchon/ArduinoJson
 
-#include "externals/StepperDriver/src/A4988.h"
+#include "A4988.h"
 
 class WatchWinder
 {
