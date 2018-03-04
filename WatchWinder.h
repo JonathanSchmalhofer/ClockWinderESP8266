@@ -17,7 +17,7 @@
 
 #include <ArduinoJson.h>          // https://github.com/bblanchon/ArduinoJson
 
-#include "A4988.h"
+#include "WatchMovementSupplier.h"
 
 class WatchWinder
 {
@@ -27,6 +27,8 @@ public:
 	void Setup();
 	void Step();
     void SaveConfigCallback();
+	
+	std::vector<WatchMovementSupplier> GetAllWatchMovementSuppliers();
 private:
     WiFiManager wifi_manager_;
 
@@ -41,6 +43,8 @@ private:
     char static_subnet_[16];
 
     bool save_config_;
+	
+	std::vector<WatchMovementSupplier> watch_movement_suppliers_;
 };
 
 #endif // #ifndef WATCHWINDER_H

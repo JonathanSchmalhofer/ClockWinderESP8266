@@ -76,3 +76,8 @@ void WatchWinder::SaveConfigCallback()
 {
     save_config_ = true;
 }
+
+std::vector<WatchMovementSupplier> WatchWinder::GetAllWatchMovementSuppliers()
+{
+    return watch_movement_suppliers_;
+}
