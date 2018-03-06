@@ -14,6 +14,7 @@ public:
     WatchMovementSupplier();
 	
 	std::vector<StepperWithWatchRequirements>& GetAllSteppers();
+	void AddStepper(StepperWithWatchRequirements stepper);
 	
 private:
 	std::vector<StepperWithWatchRequirements> steppers_;

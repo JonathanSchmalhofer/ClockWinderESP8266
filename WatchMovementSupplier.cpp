@@ -14,3 +14,8 @@ std::vector<StepperWithWatchRequirements>& WatchMovementSupplier::GetAllSteppers
 {
 	return steppers_;
 }
+
+void WatchMovementSupplier::AddStepper(StepperWithWatchRequirements stepper)
+{
+	steppers_.push_back(stepper);
+}
