@@ -8,17 +8,15 @@
 
 #include "StepperWithWatchRequirements.h"
 
-typedef std::pair<std::vector<WatchRequirement>, A4988> StepperWithRequirements;
-
 class WatchMovementSupplier
 {
 public:
     WatchMovementSupplier();
 	
-	std::vector<StepperWithRequirements> GetAllSteppers();
+	std::vector<StepperWithWatchRequirements>& GetAllSteppers();
 	
 private:
-	std::vector<StepperWithRequirements> steppers_;
+	std::vector<StepperWithWatchRequirements> steppers_;
 };
 
 #endif // #ifndef WATCHMOVEMENTSUPPLIER_H

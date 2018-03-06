@@ -10,7 +10,7 @@ WatchMovementSupplier::WatchMovementSupplier()
 {
 }
 
-std::vector<StepperWithRequirements> WatchMovementSupplier::GetAllSteppers()
+std::vector<StepperWithWatchRequirements>& WatchMovementSupplier::GetAllSteppers()
 {
 	return steppers_;
 }
