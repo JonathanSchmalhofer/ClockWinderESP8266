@@ -17,6 +17,8 @@
 
 #include <ArduinoJson.h>          // https://github.com/bblanchon/ArduinoJson
 
+#include <chrono>
+
 #include "WatchMovementSupplier.h"
 
 class WatchWinder
@@ -25,9 +27,11 @@ public:
     WatchWinder();
 	
 	void Setup();
+	void SetupWifiManager();
+	void SetupMovement();
 	void Step();
-    void SaveConfigCallback();
-	
+    void SaveConfigCallback();	
+	void AddWatchMovementSupplier();
 	std::vector<WatchMovementSupplier> GetAllWatchMovementSuppliers();
 private:
     WiFiManager wifi_manager_;
@@ -45,6 +49,8 @@ private:
     bool save_config_;
 	
 	std::vector<WatchMovementSupplier> watch_movement_suppliers_;
+	
+	std::chrono::system_clock::time_point last_timestamp_;
 };
 
 #endif // #ifndef WATCHWINDER_H

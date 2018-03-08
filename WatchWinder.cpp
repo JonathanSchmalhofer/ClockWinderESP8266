@@ -16,9 +16,16 @@ WatchWinder::WatchWinder()
 	strcpy(static_ip_, "10.0.1.56");
 	strcpy(static_gateway_, "10.0.1.1");
 	strcpy(static_subnet_, "255.255.255.0");
+	last_timestamp_ = std::chrono::system_clock::now();
 }
 
 void WatchWinder::Setup()
+{
+	SetupWifiManager();
+	SetupMovement();
+}
+
+void WatchWinder::SetupWifiManager()
 {
     if (SPIFFS.begin())
     {
@@ -68,8 +75,15 @@ void WatchWinder::Setup()
     wifi_manager_.autoConnect("WatchWinderESP8266", "watchwinder");
 }
 
+void WatchWinder::SetupMovement()
+{
+}
+
 void WatchWinder::Step()
 {
+	for (auto& watch_movement : watch_movement_suppliers_)
+	{
+	}
 }
 
 void WatchWinder::SaveConfigCallback()
@@ -81,3 +95,9 @@ std::vector<WatchMovementSupplier> WatchWinder::GetAllWatchMovementSuppliers()
 {
     return watch_movement_suppliers_;
 }
+
+void WatchWinder::AddWatchMovementSupplier()
+{
+	watch_movement_suppliers_.push_back(WatchMovementSupplier());
+}
+
