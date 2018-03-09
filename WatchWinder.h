@@ -33,6 +33,7 @@ public:
 	void Step();
     void SaveConfigCallback();	
 	void AddWatchMovementSupplier();
+	bool InAllowedTimeFrameOfDay();
 	std::vector<WatchMovementSupplier> GetAllWatchMovementSuppliers();
 private:
     WiFiManager wifi_manager_;

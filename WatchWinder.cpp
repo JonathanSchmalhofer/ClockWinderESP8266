@@ -104,8 +104,24 @@ void WatchWinder::SetupNTPClient()
 
 void WatchWinder::Step()
 {
-	for (auto& watch_movement : watch_movement_suppliers_)
+	if( InAllowedTimeFrameOfDay() )
 	{
+		for (auto& watch_movement : watch_movement_suppliers_)
+		{
+		}
+	}
+}
+
+bool WatchWinder::InAllowedTimeFrameOfDay()
+{
+	if( hour(now()) >= hour(earliest_allowed_movement_) &&
+	    hour(now()) <= hour(latest_allowed_movement_) )
+    {
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
