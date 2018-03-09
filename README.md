@@ -30,3 +30,23 @@ A4988.h
 A4988.cpp
 ```
 
+# License on Arduino Time Library
+
+The following files have been copied from [stelgenhof/NTPClient](https://github.com/stelgenhof/NTPClient) from Sacha Telgenhof:
+
+```{.sh}
+NTPClient.h
+NTPClient.cpp
+```
+
+# License on NTPClient
+
+The following files have been copied from [PaulStoffregen/Time](https://github.com/PaulStoffregen/Time) from Michael Margolis/Paul Stoffregen:
+
+```{.sh}
+TimeLib.h
+Time.h
+Time.cpp
+DateStrings.cpp
+```
+

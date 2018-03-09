@@ -17,7 +17,7 @@
 
 #include <ArduinoJson.h>          // https://github.com/bblanchon/ArduinoJson
 
-#include <chrono>
+#include "NTPClient.h"
 
 #include "WatchMovementSupplier.h"
 
@@ -29,6 +29,7 @@ public:
 	void Setup();
 	void SetupWifiManager();
 	void SetupMovement();
+    void SetupNTPClient();
 	void Step();
     void SaveConfigCallback();	
 	void AddWatchMovementSupplier();
@@ -49,8 +50,8 @@ private:
     bool save_config_;
 	
 	std::vector<WatchMovementSupplier> watch_movement_suppliers_;
-	
-	std::chrono::system_clock::time_point last_timestamp_;
+	time_t earliest_allowed_movement_;
+	time_t latest_allowed_movement_;
 };
 
 #endif // #ifndef WATCHWINDER_H

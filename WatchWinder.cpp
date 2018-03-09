@@ -16,13 +16,13 @@ WatchWinder::WatchWinder()
 	strcpy(static_ip_, "10.0.1.56");
 	strcpy(static_gateway_, "10.0.1.1");
 	strcpy(static_subnet_, "255.255.255.0");
-	last_timestamp_ = std::chrono::system_clock::now();
 }
 
 void WatchWinder::Setup()
 {
 	SetupWifiManager();
 	SetupMovement();
+	SetupNTPClient();
 }
 
 void WatchWinder::SetupWifiManager()
@@ -77,6 +77,29 @@ void WatchWinder::SetupWifiManager()
 
 void WatchWinder::SetupMovement()
 {
+}
+
+void WatchWinder::SetupNTPClient()
+{
+    NTP.init((char *)"de.pool.ntp.org", UTC0100); 	// hardcoded: German NTP Server, Central European Time (CET = UTC + 01:00)
+    NTP.setPollingInterval(60); // Poll every minute
+	
+    NTP.onSyncEvent([](NTPSyncEvent_t ntpEvent)
+	{
+        switch (ntpEvent)
+		{
+            case NTP_EVENT_INIT:
+                break;
+            case NTP_EVENT_STOP:
+                break;
+            case NTP_EVENT_NO_RESPONSE:
+                Serial.printf("NTP server not reachable.\n");
+                break;
+            case NTP_EVENT_SYNCHRONIZED:
+                Serial.printf("Got NTP time: %s\n", NTP.getTimeDate(NTP.getLastSync()));
+            break;
+        }
+    });
 }
 
 void WatchWinder::Step()
