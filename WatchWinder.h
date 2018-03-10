@@ -21,22 +21,27 @@
 
 #include "WatchMovementSupplier.h"
 
+
 class WatchWinder
 {
 public:
     WatchWinder();
 	
 	void Setup();
+	void Step();
+	void AddWatchMovementSupplier();
+	std::vector<WatchMovementSupplier> GetAllWatchMovementSuppliers();
+private:
+	void ReadConfig();
 	void SetupWifiManager();
 	void SetupMovement();
     void SetupNTPClient();
-	void Step();
-    void SaveConfigCallback();	
-	void AddWatchMovementSupplier();
 	bool InAllowedTimeFrameOfDay();
-	std::vector<WatchMovementSupplier> GetAllWatchMovementSuppliers();
-private:
+	void HandleRoot();
+	void SaveConfigCallback();
+
     WiFiManager wifi_manager_;
+	ESP8266WebServer web_server_;
 
     // define your default values here, if there are different values in config.json, they are overwritten.
     char mqtt_server_[40];
