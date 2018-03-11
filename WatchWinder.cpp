@@ -17,6 +17,10 @@ WatchWinder::WatchWinder()
     strcpy(static_ip_, "10.0.1.56");
     strcpy(static_gateway_, "10.0.1.1");
     strcpy(static_subnet_, "255.255.255.0");
+
+	int ect_relative_to_gmt = +1; // European Central Time is GMT+1
+	earliest_allowed_movement_ = ConvertEpochHourToUnixTimestamp(10, ect_relative_to_gmt); // Default: earliest start is 10:00
+	latest_allowed_movement_   = ConvertEpochHourToUnixTimestamp(20, ect_relative_to_gmt); // Default: latest start is 20:00
 }
 
 void WatchWinder::Setup()
@@ -31,9 +35,43 @@ void WatchWinder::Setup()
     Serial.println("HTTP server started");
 }
 
+void WatchWinder::SendFile(int code, String type, const char* adr, size_t len)
+{
+    SendHeader(code,type,len);
+    web_server_.sendContent_P(adr,len);
+    SendBuffer();
+}
+void WatchWinder::SendHeader(int code, String type, size_t _size)
+{
+    web_server_.setContentLength(_size);
+    web_server_.send(code, type, "");
+}
+
+void WatchWinder::SendBuffer()
+{
+    if(buffer_counter_ > 0)
+	{
+        web_server_.sendContent_P(data_website_buffer_, buffer_counter_);
+        buffer_counter_ = 0;
+    }
+}
+
+void WatchWinder::SendToBuffer(String str)
+{
+    size_t length = str.length();
+    if(buffer_counter_ + length > BUFFER_SIZE)
+    {
+        web_server_.sendContent_P(data_website_buffer_, buffer_counter_);
+        buffer_counter_ = 0;
+    }
+    memcpy(data_website_buffer_ + buffer_counter_, str.c_str(), length);
+    buffer_counter_ += length;
+}
+
 void WatchWinder::HandleRoot()
 {
-    web_server_.send(200, "text/plain", "hello from esp8266!");
+	SendFile(200, "text/html", watch_winder_HTML, sizeof(watch_winder_HTML));
+    //web_server_.send(200, "text/plain", "hello from esp8266!");
 }
 
 void WatchWinder::ReadConfig()
@@ -209,6 +247,7 @@ void WatchWinder::Step()
 {
     if( InAllowedTimeFrameOfDay() )
     {
+		Serial.println("Time is ok");
         for (auto& watch_movement : watch_movement_suppliers_)
         {
         }
@@ -237,4 +276,17 @@ std::vector<WatchMovementSupplier> WatchWinder::GetAllWatchMovementSuppliers()
 void WatchWinder::AddWatchMovementSupplier()
 {
     watch_movement_suppliers_.push_back(WatchMovementSupplier());
+}
+
+time_t WatchWinder::ConvertEpochHourToUnixTimestamp(int hour, int relative_to_gmt)
+{
+	struct tm dummy_time = {0};  // Initalize to all 0's
+	dummy_time.tm_year = 0;    // This is year-1900, so 118 = 2018
+	dummy_time.tm_mon  = 1;
+	dummy_time.tm_mday = 1;
+	dummy_time.tm_hour = hour - relative_to_gmt * 60 * 60;
+	dummy_time.tm_min  = 0;
+	dummy_time.tm_sec  = 0;
+
+	return mktime(&dummy_time);
 }

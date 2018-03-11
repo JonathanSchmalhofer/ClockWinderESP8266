@@ -21,6 +21,11 @@
 
 #include "WatchMovementSupplier.h"
 
+#include "data.h"
+#include <time.h>
+
+#define BUFFER_SIZE 10000
+
 
 class WatchWinder
 {
@@ -39,6 +44,11 @@ private:
 	bool InAllowedTimeFrameOfDay();
 	void HandleRoot();
 	void SaveConfigCallback();
+	void SendFile(int code, String type, const char* adr, size_t len);
+	void SendHeader(int code, String type, size_t _size);
+	void SendBuffer();
+	void SendToBuffer(String str);
+	time_t ConvertEpochHourToUnixTimestamp(int hour, int relative_to_gmt);
 
     WiFiManager wifi_manager_;
 	ESP8266WebServer web_server_;
@@ -58,6 +68,10 @@ private:
 	std::vector<WatchMovementSupplier> watch_movement_suppliers_;
 	time_t earliest_allowed_movement_;
 	time_t latest_allowed_movement_;
+
+	int buffer_counter_; //buffer counter;
+
+	char data_website_buffer_[BUFFER_SIZE];
 };
 
 #endif // #ifndef WATCHWINDER_H
