@@ -21,6 +21,8 @@
 
 #include "WatchMovementSupplier.h"
 
+#include "Timesettings.h"
+
 #include "data.h"
 #include <time.h>
 
@@ -43,6 +45,14 @@ private:
     void SetupNTPClient();
 	bool InAllowedTimeFrameOfDay();
 	void HandleRoot();
+	void HandleSettingsHTML();
+	void HandleTimesettingsJS();
+	void HandleFunctionsJS();
+	void HandleStyleCSS();
+	void HandleTimesettingsJSON();
+	void HandleTimesettingsSaveJSON();
+	void HandleTimesettingsResetJSON();
+	void HandleRestartESPJSON();
 	void SaveConfigCallback();
 	void SendFile(int code, String type, const char* adr, size_t len);
 	void SendHeader(int code, String type, size_t _size);
@@ -52,6 +62,8 @@ private:
 
     WiFiManager wifi_manager_;
 	ESP8266WebServer web_server_;
+	
+	Timesettings timesettings_;
 
     // define your default values here, if there are different values in config.json, they are overwritten.
     char mqtt_server_[40];

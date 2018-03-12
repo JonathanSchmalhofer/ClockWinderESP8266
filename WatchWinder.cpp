@@ -30,8 +30,29 @@ void WatchWinder::Setup()
     SetupWifiManager();
     SetupMovement();
     SetupNTPClient();
+	
+	timesettings_.Load();
+	timesettings_.Info();
+
+	// HTML
 	web_server_.on("/", (std::bind(&WatchWinder::HandleRoot, this)));
+	web_server_.on("/settings.html", (std::bind(&WatchWinder::HandleSettingsHTML, this)));
+	
+	// JS
+	web_server_.on("/js/timesettings.js", (std::bind(&WatchWinder::HandleTimesettingsJS, this)));
+	web_server_.on("/js/functions.js", (std::bind(&WatchWinder::HandleFunctionsJS, this)));
+	
+	// CSS
+	web_server_.on("/style.css", (std::bind(&WatchWinder::HandleStyleCSS, this)));
+	
+	// JSON
+	web_server_.on("/timesettings.json", (std::bind(&WatchWinder::HandleTimesettingsJSON, this)));
+    web_server_.on("/timesettingsSave.json", (std::bind(&WatchWinder::HandleTimesettingsSaveJSON, this)));
+    web_server_.on("/timesettingsReset.json", (std::bind(&WatchWinder::HandleTimesettingsResetJSON, this)));
+	web_server_.on("/restartESP.json", (std::bind(&WatchWinder::HandleRestartESPJSON, this)));
+
 	web_server_.begin();
+
     Serial.println("HTTP server started");
 }
 
@@ -71,7 +92,56 @@ void WatchWinder::SendToBuffer(String str)
 void WatchWinder::HandleRoot()
 {
 	SendFile(200, "text/html", watch_winder_HTML, sizeof(watch_winder_HTML));
-    //web_server_.send(200, "text/plain", "hello from esp8266!");
+}
+
+void WatchWinder::HandleSettingsHTML()
+{
+	SendFile(200, "text/html", data_settingsHTML, sizeof(data_settingsHTML));
+}
+
+void WatchWinder::HandleTimesettingsJS()
+{
+	SendFile(200, "text/javascript", data_js_timesettingsJS, sizeof(data_js_timesettingsJS));
+}
+
+void WatchWinder::HandleFunctionsJS()
+{
+	SendFile(200, "text/javascript", data_js_functionsJS, sizeof(data_js_functionsJS));
+}
+
+void WatchWinder::HandleStyleCSS()
+{
+	SendFile(200, "text/css;charset=UTF-8", data_styleCSS, sizeof(data_styleCSS));
+}
+
+void WatchWinder::HandleTimesettingsJSON()
+{
+    SendHeader(200, "text/json", timesettings_.GetSize());
+    String json = timesettings_.GetTimesettingsJSON();
+    SendToBuffer(json);
+    SendBuffer();
+}
+
+void WatchWinder::HandleTimesettingsSaveJSON()
+{
+	if (web_server_.hasArg("timezoneshift"))
+	{
+		timesettings_.SetTimezoneshift(web_server_.arg("timezoneshift").toInt());
+	}
+    timesettings_.Save();
+    web_server_.send(200, "text/json", "true");
+}
+
+void WatchWinder::HandleTimesettingsResetJSON()
+{
+    timesettings_.Reset();
+    web_server_.send(200, "text/json", "true");
+}
+
+void WatchWinder::HandleRestartESPJSON()
+{
+    web_server_.send( 200, "text/json", "true");
+    ESP.reset();
 }
 
 void WatchWinder::ReadConfig()
