@@ -54,6 +54,9 @@ void WatchWinder::Setup()
     web_server_.on("/timesettings.json", (std::bind(&WatchWinder::HandleTimesettingsJSON, this)));
     web_server_.on("/timesettingsSave.json", (std::bind(&WatchWinder::HandleTimesettingsSaveJSON, this)));
     web_server_.on("/timesettingsReset.json", (std::bind(&WatchWinder::HandleTimesettingsResetJSON, this)));
+    web_server_.on("/watches.json", (std::bind(&WatchWinder::HandleWatchesJSON, this)));
+    web_server_.on("/watchesSave.json", (std::bind(&WatchWinder::HandleWatchesSaveJSON, this)));
+    web_server_.on("/watchesReset.json", (std::bind(&WatchWinder::HandleWatchesResetJSON, this)));
     web_server_.on("/restartESP.json", (std::bind(&WatchWinder::HandleRestartESPJSON, this)));
 
     web_server_.begin();
@@ -202,6 +205,54 @@ void WatchWinder::HandleTimesettingsResetJSON()
     timesettings_.Reset();
     ApplyTimesettings();
     web_server_.send(200, "text/json", "true");
+}
+
+void WatchWinder::HandleWatchesJSON()
+{
+    String json = GetWatchesJSON();
+    size_t json_size = json.length();
+    SendHeader(200, "text/json", json_size);
+    SendToBuffer(json);
+    SendBuffer();
+}
+
+void WatchWinder::HandleWatchesSaveJSON()
+{
+	// TODO
+	if (web_server_.hasArg("firstwatchname"))
+    {
+    }
+    if (web_server_.hasArg("firstwatchturnsperday"))
+    {
+    }
+    if (web_server_.hasArg("firstwatchturndirection"))
+    {
+    }
+	if (web_server_.hasArg("secondwatchname"))
+    {
+    }
+    if (web_server_.hasArg("secondwatchturnsperday"))
+    {
+    }
+    if (web_server_.hasArg("secondwatchturndirection"))
+    {
+    }
+	if (web_server_.hasArg("thirdwatchname"))
+    {
+    }
+    if (web_server_.hasArg("thirdwatchturnsperday"))
+    {
+    }
+    if (web_server_.hasArg("thirdwatchturndirection"))
+    {
+    }
+	web_server_.send( 200, "text/json", "true");
+}
+
+void WatchWinder::HandleWatchesResetJSON()
+{
+	// Dummy send - to be deleted
+	web_server_.send( 200, "text/json", "true");
 }
 
 void WatchWinder::HandleRestartESPJSON()
@@ -431,4 +482,20 @@ void WatchWinder::ApplyTimesettings()
 {
     earliest_allowed_movement_ = ConvertEpochHourToUnixTimestamp(timesettings_.GetEarliestallowed(), timesettings_.GetTimezoneshift());
     latest_allowed_movement_   = ConvertEpochHourToUnixTimestamp(timesettings_.GetLatestallowed(),   timesettings_.GetTimezoneshift());
+}
+
+String WatchWinder::GetWatchesJSON()
+{
+	String json = "{";
+    json += "\"firstwatchname\":"   + (String)(int)0 + ",";
+    json += "\"firstwatchturnsperday\":" + (String)(int)0 + ",";
+    json += "\"firstwatchturndirection\":"   + (String)(int)0 + ",";
+    json += "\"secondwatchname\":"   + (String)(int)0 + ",";
+    json += "\"secondwatchturnsperday\":" + (String)(int)0 + ",";
+    json += "\"secondwatchturndirection\":"   + (String)(int)0 + ",";
+    json += "\"thirdwatchname\":"   + (String)(int)0 + ",";
+    json += "\"thirdwatchturnsperday\":" + (String)(int)0 + ",";
+    json += "\"thirdwatchturndirection\":"   + (String)(int)0 + "}";
+    
+    return json;
 }

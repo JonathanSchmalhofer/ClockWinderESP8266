@@ -56,6 +56,9 @@ private:
     void HandleTimesettingsJSON();
     void HandleTimesettingsSaveJSON();
     void HandleTimesettingsResetJSON();
+    void HandleWatchesJSON();
+    void HandleWatchesSaveJSON();
+    void HandleWatchesResetJSON();
     void HandleRestartESPJSON();
     void SaveConfigCallback();
     void SendFile(int code, String type, const char* adr, size_t len);
@@ -64,6 +67,7 @@ private:
     void SendToBuffer(String str);
     time_t ConvertEpochHourToUnixTimestamp(int hour, int relative_to_gmt);
 	void ApplyTimesettings();
+	String GetWatchesJSON();
 
     WiFiManager wifi_manager_;
     ESP8266WebServer web_server_;
