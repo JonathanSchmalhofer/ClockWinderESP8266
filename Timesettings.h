@@ -30,6 +30,7 @@ public:
     void WriteIntegerToEEPROM(int adress, int value);
     int ReadIntegerFromEEPROM(int adress);
     
+    void CheckValidValues();
     int GetTimezoneshift();
     int GetEarliestallowed();
     int GetLatestallowed();

@@ -2,6 +2,7 @@
 
 Timesettings::Timesettings()
 {
+    CheckValidValues();
     timesettings_loaded_ = false;
 }
 
@@ -35,6 +36,7 @@ void Timesettings::Load() {
     timezoneshift_   = ReadIntegerFromEEPROM(SETTINGS_EEPROM_ADRESS_TIMEZONESHIFT);
     earliestallowed_ = ReadIntegerFromEEPROM(SETTINGS_EEPROM_ADRESS_EARLIESTALLOWED);
     latestallowed_   = ReadIntegerFromEEPROM(SETTINGS_EEPROM_ADRESS_LATESTALLOWED);
+    CheckValidValues();
     timesettings_loaded_ = true;
 }
 
@@ -53,6 +55,7 @@ void Timesettings::Reset()
 
 void Timesettings::Save()
 {  
+    CheckValidValues();
     WriteIntegerToEEPROM(SETTINGS_EEPROM_ADRESS_TIMEZONESHIFT,   timezoneshift_);
     WriteIntegerToEEPROM(SETTINGS_EEPROM_ADRESS_EARLIESTALLOWED, earliestallowed_);
     WriteIntegerToEEPROM(SETTINGS_EEPROM_ADRESS_LATESTALLOWED,   latestallowed_);
@@ -72,6 +75,7 @@ void Timesettings::Info()
 
 String Timesettings::GetTimesettingsJSON()
 {
+    CheckValidValues();
     String json = "{";
     json += "\"timezoneshift\":"   + (String)(int)timezoneshift_   + ",";
     json += "\"earliestallowed\":" + (String)(int)earliestallowed_ + ",";
@@ -85,6 +89,38 @@ size_t Timesettings::GetSize()
     String json = GetTimesettingsJSON();
     size_t json_size = json.length();
     return json_size;
+}
+
+void Timesettings::CheckValidValues()
+{
+    if (timezoneshift_ < 0)
+    {
+        timezoneshift_ = 0;
+    }
+    if (timezoneshift_ > 24)
+    {
+        timezoneshift_ = 24;
+    }
+    if (earliestallowed_ < 0)
+    {
+        earliestallowed_ = 0;
+    }
+    if (earliestallowed_ > 24)
+    {
+        earliestallowed_ = 24;
+    }
+    if (latestallowed_ < 0)
+    {
+        latestallowed_ = 0;
+    }
+    if (latestallowed_ > 24)
+    {
+        latestallowed_ = 24;
+    }
+    if (earliestallowed_ > latestallowed_)
+    {
+        latestallowed_ = earliestallowed_;
+    }
 }
 
 int Timesettings::GetTimezoneshift()
