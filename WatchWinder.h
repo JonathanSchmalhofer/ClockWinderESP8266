@@ -33,37 +33,40 @@ class WatchWinder
 {
 public:
     WatchWinder();
-	
-	void Setup();
-	void Step();
-	void AddWatchMovementSupplier();
-	std::vector<WatchMovementSupplier> GetAllWatchMovementSuppliers();
+    
+    void Setup();
+    void Step();
+    void AddWatchMovementSupplier();
+    std::vector<WatchMovementSupplier> GetAllWatchMovementSuppliers();
 private:
-	void ReadConfig();
-	void SetupWifiManager();
-	void SetupMovement();
+    void ReadConfig();
+    void SetupWifiManager();
+    void SetupMovement();
     void SetupNTPClient();
-	bool InAllowedTimeFrameOfDay();
-	void HandleRoot();
-	void HandleSettingsHTML();
-	void HandleTimesettingsJS();
-	void HandleFunctionsJS();
-	void HandleStyleCSS();
-	void HandleTimesettingsJSON();
-	void HandleTimesettingsSaveJSON();
-	void HandleTimesettingsResetJSON();
-	void HandleRestartESPJSON();
-	void SaveConfigCallback();
-	void SendFile(int code, String type, const char* adr, size_t len);
-	void SendHeader(int code, String type, size_t _size);
-	void SendBuffer();
-	void SendToBuffer(String str);
-	time_t ConvertEpochHourToUnixTimestamp(int hour, int relative_to_gmt);
+    bool InAllowedTimeFrameOfDay();
+    void HandleRoot();
+    void HandleSettingsHTML();
+    void HandleWatchesHTML();
+    void HandleTimesettingsJS();
+    void HandleWatchesJS();
+    void HandleFunctionsJS();
+    void HandleStyleCSS();
+    void HandleTimesettingsJSON();
+    void HandleTimesettingsSaveJSON();
+    void HandleTimesettingsResetJSON();
+    void HandleRestartESPJSON();
+    void SaveConfigCallback();
+    void SendFile(int code, String type, const char* adr, size_t len);
+    void SendHeader(int code, String type, size_t _size);
+    void SendBuffer();
+    void SendToBuffer(String str);
+    time_t ConvertEpochHourToUnixTimestamp(int hour, int relative_to_gmt);
+	void ApplyTimesettings();
 
     WiFiManager wifi_manager_;
-	ESP8266WebServer web_server_;
-	
-	Timesettings timesettings_;
+    ESP8266WebServer web_server_;
+    
+    Timesettings timesettings_;
 
     // define your default values here, if there are different values in config.json, they are overwritten.
     char mqtt_server_[40];
@@ -76,14 +79,14 @@ private:
     char static_subnet_[16];
 
     bool save_config_;
-	
-	std::vector<WatchMovementSupplier> watch_movement_suppliers_;
-	time_t earliest_allowed_movement_;
-	time_t latest_allowed_movement_;
+    
+    std::vector<WatchMovementSupplier> watch_movement_suppliers_;
+    time_t earliest_allowed_movement_;
+    time_t latest_allowed_movement_;
 
-	int buffer_counter_; //buffer counter;
+    int buffer_counter_; //buffer counter;
 
-	char data_website_buffer_[BUFFER_SIZE];
+    char data_website_buffer_[BUFFER_SIZE];
 };
 
 #endif // #ifndef WATCHWINDER_H

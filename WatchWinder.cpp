@@ -8,7 +8,7 @@
 
 WatchWinder::WatchWinder()
     : wifi_manager_(),
-	  web_server_(80),
+      web_server_(80),
       save_config_(true)
 {
     strcpy(mqtt_port_, "8080");
@@ -18,9 +18,7 @@ WatchWinder::WatchWinder()
     strcpy(static_gateway_, "10.0.1.1");
     strcpy(static_subnet_, "255.255.255.0");
 
-	int ect_relative_to_gmt = +1; // European Central Time is GMT+1
-	earliest_allowed_movement_ = ConvertEpochHourToUnixTimestamp(10, ect_relative_to_gmt); // Default: earliest start is 10:00
-	latest_allowed_movement_   = ConvertEpochHourToUnixTimestamp(20, ect_relative_to_gmt); // Default: latest start is 20:00
+    ApplyTimesettings();
 }
 
 void WatchWinder::Setup()
@@ -30,28 +28,32 @@ void WatchWinder::Setup()
     SetupWifiManager();
     SetupMovement();
     SetupNTPClient();
-	
-	timesettings_.Load();
-	timesettings_.Info();
+    
+    timesettings_.Load();
+    timesettings_.Info();
+    ApplyTimesettings();
 
-	// HTML
-	web_server_.on("/", (std::bind(&WatchWinder::HandleRoot, this)));
-	web_server_.on("/settings.html", (std::bind(&WatchWinder::HandleSettingsHTML, this)));
-	
-	// JS
-	web_server_.on("/js/timesettings.js", (std::bind(&WatchWinder::HandleTimesettingsJS, this)));
-	web_server_.on("/js/functions.js", (std::bind(&WatchWinder::HandleFunctionsJS, this)));
-	
-	// CSS
-	web_server_.on("/style.css", (std::bind(&WatchWinder::HandleStyleCSS, this)));
-	
-	// JSON
-	web_server_.on("/timesettings.json", (std::bind(&WatchWinder::HandleTimesettingsJSON, this)));
+    // HTML
+    web_server_.on("/", (std::bind(&WatchWinder::HandleRoot, this)));
+    web_server_.on("/index.html", (std::bind(&WatchWinder::HandleRoot, this)));
+    web_server_.on("/watches.html", (std::bind(&WatchWinder::HandleWatchesHTML, this)));
+    web_server_.on("/settings.html", (std::bind(&WatchWinder::HandleSettingsHTML, this)));
+    
+    // JS
+    web_server_.on("/js/timesettings.js", (std::bind(&WatchWinder::HandleTimesettingsJS, this)));
+    web_server_.on("/js/watches.js", (std::bind(&WatchWinder::HandleWatchesJS, this)));
+    web_server_.on("/js/functions.js", (std::bind(&WatchWinder::HandleFunctionsJS, this)));
+    
+    // CSS
+    web_server_.on("/style.css", (std::bind(&WatchWinder::HandleStyleCSS, this)));
+    
+    // JSON
+    web_server_.on("/timesettings.json", (std::bind(&WatchWinder::HandleTimesettingsJSON, this)));
     web_server_.on("/timesettingsSave.json", (std::bind(&WatchWinder::HandleTimesettingsSaveJSON, this)));
     web_server_.on("/timesettingsReset.json", (std::bind(&WatchWinder::HandleTimesettingsResetJSON, this)));
-	web_server_.on("/restartESP.json", (std::bind(&WatchWinder::HandleRestartESPJSON, this)));
+    web_server_.on("/restartESP.json", (std::bind(&WatchWinder::HandleRestartESPJSON, this)));
 
-	web_server_.begin();
+    web_server_.begin();
 
     Serial.println("HTTP server started");
 }
@@ -71,7 +73,7 @@ void WatchWinder::SendHeader(int code, String type, size_t _size)
 void WatchWinder::SendBuffer()
 {
     if(buffer_counter_ > 0)
-	{
+    {
         web_server_.sendContent_P(data_website_buffer_, buffer_counter_);
         buffer_counter_ = 0;
     }
@@ -91,27 +93,37 @@ void WatchWinder::SendToBuffer(String str)
 
 void WatchWinder::HandleRoot()
 {
-	SendFile(200, "text/html", watch_winder_HTML, sizeof(watch_winder_HTML));
+    SendFile(200, "text/html", data_watchesHTML, sizeof(data_watchesHTML));
 }
 
 void WatchWinder::HandleSettingsHTML()
 {
-	SendFile(200, "text/html", data_settingsHTML, sizeof(data_settingsHTML));
+    SendFile(200, "text/html", data_settingsHTML, sizeof(data_settingsHTML));
+}
+
+void WatchWinder::HandleWatchesHTML()
+{
+    SendFile(200, "text/html", data_watchesHTML, sizeof(data_watchesHTML));
 }
 
 void WatchWinder::HandleTimesettingsJS()
 {
-	SendFile(200, "text/javascript", data_js_timesettingsJS, sizeof(data_js_timesettingsJS));
+    SendFile(200, "text/javascript", data_js_timesettingsJS, sizeof(data_js_timesettingsJS));
+}
+
+void WatchWinder::HandleWatchesJS()
+{
+    SendFile(200, "text/javascript", data_js_watchesJS, sizeof(data_js_watchesJS));
 }
 
 void WatchWinder::HandleFunctionsJS()
 {
-	SendFile(200, "text/javascript", data_js_functionsJS, sizeof(data_js_functionsJS));
+    SendFile(200, "text/javascript", data_js_functionsJS, sizeof(data_js_functionsJS));
 }
 
 void WatchWinder::HandleStyleCSS()
 {
-	SendFile(200, "text/css;charset=UTF-8", data_styleCSS, sizeof(data_styleCSS));
+    SendFile(200, "text/css;charset=UTF-8", data_styleCSS, sizeof(data_styleCSS));
 }
 
 void WatchWinder::HandleTimesettingsJSON()
@@ -124,17 +136,27 @@ void WatchWinder::HandleTimesettingsJSON()
 
 void WatchWinder::HandleTimesettingsSaveJSON()
 {
-	if (web_server_.hasArg("timezoneshift"))
-	{
-		timesettings_.SetTimezoneshift(web_server_.arg("timezoneshift").toInt());
-	}
+    if (web_server_.hasArg("timezoneshift"))
+    {
+        timesettings_.SetTimezoneshift(web_server_.arg("timezoneshift").toInt());
+    }
+    if (web_server_.hasArg("earliestallowed"))
+    {
+        timesettings_.SetEarliestallowed(web_server_.arg("earliestallowed").toInt());
+    }
+    if (web_server_.hasArg("latestallowed"))
+    {
+        timesettings_.SetLatestallowed(web_server_.arg("latestallowed").toInt());
+    }
     timesettings_.Save();
+    ApplyTimesettings();
     web_server_.send(200, "text/json", "true");
 }
 
 void WatchWinder::HandleTimesettingsResetJSON()
 {
     timesettings_.Reset();
+    ApplyTimesettings();
     web_server_.send(200, "text/json", "true");
 }
 
@@ -209,8 +231,8 @@ void WatchWinder::SetupWifiManager()
     WiFiManagerParameter custom_mqtt_server("server", "mqtt server", mqtt_server_, 40);
     WiFiManagerParameter custom_mqtt_port("port", "mqtt port", mqtt_port_, 6);
     WiFiManagerParameter custom_blynk_token("blynk", "blynk token", blynk_token_, 32);
-	
-	  //set config save notify callback
+    
+    //set config save notify callback
     //TODO:wifi_manager_.setSaveConfigCallback((std::bind(&WatchWinder::SaveConfigCallback, this)));
 
     // set static ip
@@ -309,20 +331,20 @@ void WatchWinder::SetupNTPClient()
 }
 void WatchWinder::SaveConfigCallback()
 {
-	Serial.println("Should save config");
-	save_config_ = true;
+    Serial.println("Should save config");
+    save_config_ = true;
 }
 
 void WatchWinder::Step()
 {
     if( InAllowedTimeFrameOfDay() )
     {
-		Serial.println("Time is ok");
+        Serial.println("Time is ok");
         for (auto& watch_movement : watch_movement_suppliers_)
         {
         }
     }
-	web_server_.handleClient();
+    web_server_.handleClient();
 }
 
 bool WatchWinder::InAllowedTimeFrameOfDay()
@@ -350,13 +372,19 @@ void WatchWinder::AddWatchMovementSupplier()
 
 time_t WatchWinder::ConvertEpochHourToUnixTimestamp(int hour, int relative_to_gmt)
 {
-	struct tm dummy_time = {0};  // Initalize to all 0's
-	dummy_time.tm_year = 0;    // This is year-1900, so 118 = 2018
-	dummy_time.tm_mon  = 1;
-	dummy_time.tm_mday = 1;
-	dummy_time.tm_hour = hour - relative_to_gmt * 60 * 60;
-	dummy_time.tm_min  = 0;
-	dummy_time.tm_sec  = 0;
+    struct tm dummy_time = {0};  // Initalize to all 0's
+    dummy_time.tm_year = 0;    // This is year-1900, so 118 = 2018
+    dummy_time.tm_mon  = 1;
+    dummy_time.tm_mday = 1;
+    dummy_time.tm_hour = hour - relative_to_gmt * 60 * 60;
+    dummy_time.tm_min  = 0;
+    dummy_time.tm_sec  = 0;
 
-	return mktime(&dummy_time);
+    return mktime(&dummy_time);
+}
+
+void WatchWinder::ApplyTimesettings()
+{
+    earliest_allowed_movement_ = ConvertEpochHourToUnixTimestamp(timesettings_.GetEarliestallowed(), timesettings_.GetTimezoneshift());
+    latest_allowed_movement_   = ConvertEpochHourToUnixTimestamp(timesettings_.GetLatestallowed(),   timesettings_.GetTimezoneshift());
 }

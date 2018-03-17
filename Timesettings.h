@@ -10,7 +10,9 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
-#define SETTINGS_EEPROM_ADRESS_TIMEZONESHIFT 1024
+#define SETTINGS_EEPROM_ADRESS_TIMEZONESHIFT   1024    // type int - +1 byte for next address enough
+#define SETTINGS_EEPROM_ADRESS_EARLIESTALLOWED 1025 // type int - +1 byte for next address enough
+#define SETTINGS_EEPROM_ADRESS_LATESTALLOWED   1026 // type int - +1 byte for next address enough
 
 #define SETTINGS_EEPROM_ADRESS_CHECKNUM 2001
 #define SETTINGS_CHECKNUM 16
@@ -24,14 +26,20 @@ public:
     void Save();
     void Info();
     size_t GetSize();
-	String GetTimesettingsJSON();
-	void WriteIntegerToEEPROM(int adress, int value);
-	int ReadIntegerFromEEPROM(int adress);
-	
-	int GetTimezoneshift();
-	void SetTimezoneshift(int timezoneshift);
-private:	
+    String GetTimesettingsJSON();
+    void WriteIntegerToEEPROM(int adress, int value);
+    int ReadIntegerFromEEPROM(int adress);
+    
+    int GetTimezoneshift();
+    int GetEarliestallowed();
+    int GetLatestallowed();
+    void SetTimezoneshift(int timezoneshift);
+    void SetEarliestallowed(int earliestallowed);
+    void SetLatestallowed(int latestallowed);
+private:    
     int timezoneshift_;
+    int earliestallowed_;
+    int latestallowed_;
     bool timesettings_loaded_;    
 };
 

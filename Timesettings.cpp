@@ -2,7 +2,7 @@
 
 Timesettings::Timesettings()
 {
-	timesettings_loaded_ = false;
+    timesettings_loaded_ = false;
 }
 
 //source: http://shelvin.de/eine-integer-zahl-in-das-arduiono-eeprom-schreiben/
@@ -32,7 +32,9 @@ void Timesettings::Load() {
         return;
     }
 
-    timezoneshift_ = ReadIntegerFromEEPROM(SETTINGS_EEPROM_ADRESS_TIMEZONESHIFT);
+    timezoneshift_   = ReadIntegerFromEEPROM(SETTINGS_EEPROM_ADRESS_TIMEZONESHIFT);
+    earliestallowed_ = ReadIntegerFromEEPROM(SETTINGS_EEPROM_ADRESS_EARLIESTALLOWED);
+    latestallowed_   = ReadIntegerFromEEPROM(SETTINGS_EEPROM_ADRESS_LATESTALLOWED);
     timesettings_loaded_ = true;
 }
 
@@ -40,7 +42,9 @@ void Timesettings::Reset()
 {
     Serial.print("reset timesettings...");
 
-    timezoneshift_ = 1; // Default shall be central european time, which is GMT+1
+    timezoneshift_   =  1; // Default shall be central european time, which is GMT+1
+    earliestallowed_ = 10; // Default shall be 10:00 o'clock
+    latestallowed_   = 20; // Default shall be 20:00 o'clock
 
     Serial.println("done");
 
@@ -49,7 +53,9 @@ void Timesettings::Reset()
 
 void Timesettings::Save()
 {  
-    WriteIntegerToEEPROM(SETTINGS_EEPROM_ADRESS_TIMEZONESHIFT, timezoneshift_);
+    WriteIntegerToEEPROM(SETTINGS_EEPROM_ADRESS_TIMEZONESHIFT,   timezoneshift_);
+    WriteIntegerToEEPROM(SETTINGS_EEPROM_ADRESS_EARLIESTALLOWED, earliestallowed_);
+    WriteIntegerToEEPROM(SETTINGS_EEPROM_ADRESS_LATESTALLOWED,   latestallowed_);
     EEPROM.write(SETTINGS_EEPROM_ADRESS_CHECKNUM, SETTINGS_CHECKNUM);
   
     Info();
@@ -60,14 +66,18 @@ void Timesettings::Info()
 {
     Serial.println("Settings:");
     Serial.println("Timezone shift: " + (String)timezoneshift_);
+    Serial.println("Earliest Start: " + (String)earliestallowed_);
+    Serial.println("Latest Start:   " + (String)latestallowed_);
 }
 
 String Timesettings::GetTimesettingsJSON()
 {
     String json = "{";
-    json += "\"timezoneshift\":" + (String)(int)timezoneshift_ + "}";
-	
-	return json;
+    json += "\"timezoneshift\":"   + (String)(int)timezoneshift_   + ",";
+    json += "\"earliestallowed\":" + (String)(int)earliestallowed_ + ",";
+    json += "\"latestallowed\":"   + (String)(int)latestallowed_   + "}";
+    
+    return json;
 }
 
 size_t Timesettings::GetSize()
@@ -82,7 +92,27 @@ int Timesettings::GetTimezoneshift()
     return timezoneshift_;
 }
 
+int Timesettings::GetEarliestallowed()
+{
+    return earliestallowed_;
+}
+
+int Timesettings::GetLatestallowed()
+{
+    return latestallowed_;
+}
+
 void Timesettings::SetTimezoneshift(int timezoneshift)
 {
     timezoneshift_ = timezoneshift;
+}
+
+void Timesettings::SetEarliestallowed(int earliestallowed)
+{
+    earliestallowed_ = earliestallowed;
+}
+
+void Timesettings::SetLatestallowed(int latestallowed)
+{
+    latestallowed_ = latestallowed;
 }
