@@ -50,3 +50,6 @@ Time.cpp
 DateStrings.cpp
 ```
 
+# License on WebServer Handling & Data Conversion
+
+Large parts of how to handle requests to the ESP8266WebServer (e.g. SendHeader(), SendBuffer(), SendFile(), etc.) as well as how to convert files (e.g. HTML, CSS, JS) to hex werde copied from [spacehuhn/esp8266_deauther](https://github.com/spacehuhn/esp8266_deauther) from Stefan Kremser.
