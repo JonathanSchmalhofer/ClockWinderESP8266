@@ -8,37 +8,37 @@
 
 WatchRequirement::WatchRequirement(std::string name, TurningDirection turning_direction, int revolutions_per_day)
 {
-	name_ = name;
-	turning_direction_ = turning_direction;
-	revolutions_per_day_ = revolutions_per_day;
+    name_ = name;
+    turning_direction_ = turning_direction;
+    revolutions_per_day_ = revolutions_per_day;
 }
 
 TurningDirection WatchRequirement::GetTurningDirection()
 {
-	return turning_direction_;
+    return turning_direction_;
 }
 
 void WatchRequirement::SetTurningDirection(TurningDirection turning_direction)
 {
-	turning_direction_ = turning_direction;
+    turning_direction_ = turning_direction;
 }
 
 int WatchRequirement::GetRevolutionsPerDay()
 {
-	return revolutions_per_day_;
+    return revolutions_per_day_;
 }
 
 void WatchRequirement::SetRevolutionsPerDay(int revolutions_per_day)
 {
-	revolutions_per_day_ = revolutions_per_day;
+    revolutions_per_day_ = revolutions_per_day;
 }
 
 std::string WatchRequirement::GetName()
 {
-	return name_;
+    return name_;
 }
 
 void WatchRequirement::SetName(std::string name)
 {
-	name_ = name;
+    name_ = name;
 }

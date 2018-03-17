@@ -139,7 +139,7 @@ int year(time_t t) { // the year for the given time
   return tmYearToCalendar(tm.Year);
 }
 
-/*============================================================================*/	
+/*============================================================================*/    
 /* functions to convert to and from system time */
 /* These are for interfacing with time serivces and are not normally needed in a sketch */
 
@@ -231,7 +231,7 @@ time_t makeTime(const tmElements_t &tm){
   seconds+= tm.Second;
   return (time_t)seconds; 
 }
-/*=====================================================*/	
+/*=====================================================*/    
 /* Low level system time functions  */
 
 static uint32_t sysTime = 0;
@@ -248,11 +248,11 @@ time_t sysUnsyncedTime = 0; // the time sysTime unadjusted by sync
 
 
 time_t now() {
-	// calculate number of seconds passed since last call to now()
+    // calculate number of seconds passed since last call to now()
   while (millis() - prevMillis >= 1000) {
-		// millis() and prevMillis are both unsigned ints thus the subtraction will always be the absolute value of the difference
+        // millis() and prevMillis are both unsigned ints thus the subtraction will always be the absolute value of the difference
     sysTime++;
-    prevMillis += 1000;	
+    prevMillis += 1000;    
 #ifdef TIME_DRIFT_INFO
     sysUnsyncedTime++; // this can be compared to the synced time to measure long term drift     
 #endif

@@ -9,42 +9,42 @@
 WatchMovementSupplier::WatchMovementSupplier()
     : stepper_(0, 0, 0)
 {
-	const short kfull_step = 1;
-	const short krpm = 1;
-	stepper_.begin(krpm, kfull_step);
+    const short kfull_step = 1;
+    const short krpm = 1;
+    stepper_.begin(krpm, kfull_step);
 }
 
 A4988& WatchMovementSupplier::GetStepper()
 {
-	return stepper_;
+    return stepper_;
 }
 
 void WatchMovementSupplier::SetStepper(A4988 stepper)
 {
-	stepper_ = stepper;
+    stepper_ = stepper;
 }
 
 std::vector<WatchRequirementTurningLikeStepper>& WatchMovementSupplier::GetAllRequirements()
 {
-	return requirements_;
+    return requirements_;
 }
 
 short WatchMovementSupplier::GetRPM()
 {
-	return stepper_.getRPM();
+    return stepper_.getRPM();
 }
 
 void WatchMovementSupplier::SetRPM(short rpm)
 {
-	stepper_.setRPM(rpm);
+    stepper_.setRPM(rpm);
 }
 
 void WatchMovementSupplier::Rotate(double degree)
 {
-	stepper_.rotate(degree);
+    stepper_.rotate(degree);
 }
 
 void WatchMovementSupplier::RemoveRequirementAtIndex(int index)
 {
-	requirements_.erase( requirements_.begin() + index );
+    requirements_.erase( requirements_.begin() + index );
 }

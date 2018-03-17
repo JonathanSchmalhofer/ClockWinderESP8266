@@ -10,30 +10,30 @@
 
 enum TurningDirection
 {
-	CLOCKWISEONLY = 0,
-	COUNTERCLOCKWISEONLY,
-	BOTHDIRECTIONS
+    CLOCKWISEONLY = 0,
+    COUNTERCLOCKWISEONLY,
+    BOTHDIRECTIONS
 };
 
 class WatchRequirement
 {
 public:
     WatchRequirement(std::string name, TurningDirection turning_direction, int revolutions_per_day);
-	
-	TurningDirection GetTurningDirection();
-	void SetTurningDirection(TurningDirection turning_direction);
-	
-	int GetRevolutionsPerDay();
-	void SetRevolutionsPerDay(int revolutions_per_day);
-	
-	std::string GetName();
-	void SetName(std::string name);
+    
+    TurningDirection GetTurningDirection();
+    void SetTurningDirection(TurningDirection turning_direction);
+    
+    int GetRevolutionsPerDay();
+    void SetRevolutionsPerDay(int revolutions_per_day);
+    
+    std::string GetName();
+    void SetName(std::string name);
 
 private:
-	std::string name_;
-	int revolutions_per_day_;
-	TurningDirection turning_direction_;
-	
+    std::string name_;
+    int revolutions_per_day_;
+    TurningDirection turning_direction_;
+    
 };
 
 #endif // #ifndef WATCHREQUIREMENT_H
