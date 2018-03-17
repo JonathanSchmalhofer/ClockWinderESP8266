@@ -32,12 +32,15 @@ void WatchWinder::Setup()
     timesettings_.Load();
     timesettings_.Info();
     ApplyTimesettings();
+    
+    SetupWatchMovementSuppliers();
 
     // HTML
     web_server_.on("/", (std::bind(&WatchWinder::HandleRoot, this)));
     web_server_.on("/index.html", (std::bind(&WatchWinder::HandleRoot, this)));
     web_server_.on("/watches.html", (std::bind(&WatchWinder::HandleWatchesHTML, this)));
     web_server_.on("/settings.html", (std::bind(&WatchWinder::HandleSettingsHTML, this)));
+    web_server_.on("/info.html", (std::bind(&WatchWinder::HandleInfoHTML, this)));
     
     // JS
     web_server_.on("/js/timesettings.js", (std::bind(&WatchWinder::HandleTimesettingsJS, this)));
@@ -56,6 +59,42 @@ void WatchWinder::Setup()
     web_server_.begin();
 
     Serial.println("HTTP server started");
+}
+
+void WatchWinder::SetupWatchMovementSuppliers()
+{
+    // In my current design, there is only one stepper connected to the ESP8266
+    WatchMovementSupplier stepper_providing_movement;
+
+    const short kdesired_watch_rpm   = 19;  // According to the following link, watch winders like the Elma Schmidbauer GmbH Cyclomatic Due™ or Buben-Zorweg Time Mover™ rotate at 19pm (for 32mins) so "a watch can be given 24 hours' worth of power reserve"
+                                            // we will thus also use this as default value
+    const short kpinion_number_teeth = 23;  // In my current design, the pinion has 23 teeth
+    const short kgear_number_teeth   = 55;  // In my current design, the gears (all three equal) have 55 teeth
+    const short kdefault_rpm = (short)(kgear_number_teeth/kpinion_number_teeth * kdesired_watch_rpm);
+                                            // the stepper itself needs to run (approx 2.39 times) faster to achieve the 19 rpm for the watches
+    stepper_providing_movement.SetRPM(kdefault_rpm);
+
+    // First Watch - next to stepper
+    WatchRequirementTurningLikeStepper::first_type first_watch_requirements("First Watch", BOTHDIRECTIONS, 720); // 720 seems to be a good value for "turns per day" according to http://people.timezone.com/msandler/Articles/ArnsteinWinder/Winder2.html
+    WatchRequirementTurningLikeStepper::second_type first_watch_turning_like_stepper = false;
+    WatchRequirementTurningLikeStepper first_watch = std::make_pair(first_watch_requirements, first_watch_turning_like_stepper);
+
+    // Second Watch - in the middle
+    WatchRequirementTurningLikeStepper::first_type second_watch_requirements("Second Watch", BOTHDIRECTIONS, 720); // 720 seems to be a good value for "turns per day" according to http://people.timezone.com/msandler/Articles/ArnsteinWinder/Winder2.html
+    WatchRequirementTurningLikeStepper::second_type second_watch_turning_like_stepper = true;
+    WatchRequirementTurningLikeStepper second_watch = std::make_pair(second_watch_requirements, second_watch_turning_like_stepper);
+
+    // Third Watch - at the opposite end of the stepper
+    WatchRequirementTurningLikeStepper::first_type third_watch_requirements("Third Watch", BOTHDIRECTIONS, 720); // 720 seems to be a good value for "turns per day" according to http://people.timezone.com/msandler/Articles/ArnsteinWinder/Winder2.html
+    WatchRequirementTurningLikeStepper::second_type third_watch_turning_like_stepper = false;
+    WatchRequirementTurningLikeStepper third_watch = std::make_pair(third_watch_requirements, third_watch_turning_like_stepper);
+
+    // In my current design, there are three watches attached to the stepper imposing three requirements (one per watch) on the movement to be performed by the stepper per day
+    stepper_providing_movement.GetAllRequirements().push_back(first_watch);
+    stepper_providing_movement.GetAllRequirements().push_back(second_watch);
+    stepper_providing_movement.GetAllRequirements().push_back(third_watch);
+
+    watch_movement_suppliers_.push_back(stepper_providing_movement);
 }
 
 void WatchWinder::SendFile(int code, String type, const char* adr, size_t len)
@@ -104,6 +143,11 @@ void WatchWinder::HandleSettingsHTML()
 void WatchWinder::HandleWatchesHTML()
 {
     SendFile(200, "text/html", data_watchesHTML, sizeof(data_watchesHTML));
+}
+
+void WatchWinder::HandleInfoHTML()
+{
+    SendFile(200, "text/html", data_infoHTML, sizeof(data_infoHTML));
 }
 
 void WatchWinder::HandleTimesettingsJS()

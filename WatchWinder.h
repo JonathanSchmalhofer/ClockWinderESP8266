@@ -39,6 +39,7 @@ public:
     void AddWatchMovementSupplier();
     std::vector<WatchMovementSupplier> GetAllWatchMovementSuppliers();
 private:
+    void SetupWatchMovementSuppliers();
     void ReadConfig();
     void SetupWifiManager();
     void SetupMovement();
@@ -47,6 +48,7 @@ private:
     void HandleRoot();
     void HandleSettingsHTML();
     void HandleWatchesHTML();
+    void HandleInfoHTML();
     void HandleTimesettingsJS();
     void HandleWatchesJS();
     void HandleFunctionsJS();
