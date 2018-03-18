@@ -68,6 +68,24 @@ private:
     time_t ConvertEpochHourToUnixTimestamp(int hour, int relative_to_gmt);
 	void ApplyTimesettings();
 	String GetWatchesJSON();
+	String GetFirstwatchname();
+	int GetFirstwatchturnsperday();
+	TurningDirection GetFirstwatchturndirection();
+	String GetSecondwatchname();
+	int GetSecondwatchturnsperday();
+	TurningDirection GetSecondwatchturndirection();
+	String GetThirdwatchname();
+	int GetThirdwatchturnsperday();
+	TurningDirection GetThirdwatchturndirection();
+	void SetFirstwatchname(String name);
+	void SetFirstwatchturnsperday(int revolutions_per_day);
+	void SetFirstwatchturndirection(TurningDirection turning_direction);
+	void SetSecondwatchname(String name);
+	void SetSecondwatchturnsperday(int revolutions_per_day);
+	void SetSecondwatchturndirection(TurningDirection turning_direction);
+	void SetThirdwatchname(String name);
+	void SetThirdwatchturnsperday(int revolutions_per_day);
+	void SetThirdwatchturndirection(TurningDirection turning_direction);
 
     WiFiManager wifi_manager_;
     ESP8266WebServer web_server_;

@@ -6,7 +6,7 @@
 
 #include "WatchRequirement.h"
 
-WatchRequirement::WatchRequirement(std::string name, TurningDirection turning_direction, int revolutions_per_day)
+WatchRequirement::WatchRequirement(String name, TurningDirection turning_direction, int revolutions_per_day)
 {
     name_ = name;
     turning_direction_ = turning_direction;
@@ -33,12 +33,12 @@ void WatchRequirement::SetRevolutionsPerDay(int revolutions_per_day)
     revolutions_per_day_ = revolutions_per_day;
 }
 
-std::string WatchRequirement::GetName()
+String WatchRequirement::GetName()
 {
     return name_;
 }
 
-void WatchRequirement::SetName(std::string name)
+void WatchRequirement::SetName(String name)
 {
     name_ = name;
 }

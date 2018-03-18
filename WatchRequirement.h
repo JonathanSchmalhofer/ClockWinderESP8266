@@ -6,7 +6,7 @@
 #ifndef WATCHREQUIREMENT_H
 #define WATCHREQUIREMENT_H
 
-#include <string>
+#include <Arduino.h>
 
 enum TurningDirection
 {
@@ -18,7 +18,7 @@ enum TurningDirection
 class WatchRequirement
 {
 public:
-    WatchRequirement(std::string name, TurningDirection turning_direction, int revolutions_per_day);
+    WatchRequirement(String name, TurningDirection turning_direction, int revolutions_per_day);
     
     TurningDirection GetTurningDirection();
     void SetTurningDirection(TurningDirection turning_direction);
@@ -26,11 +26,11 @@ public:
     int GetRevolutionsPerDay();
     void SetRevolutionsPerDay(int revolutions_per_day);
     
-    std::string GetName();
-    void SetName(std::string name);
+    String GetName();
+    void SetName(String name);
 
 private:
-    std::string name_;
+    String name_;
     int revolutions_per_day_;
     TurningDirection turning_direction_;
     

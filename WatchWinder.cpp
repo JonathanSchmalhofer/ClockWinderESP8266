@@ -218,33 +218,41 @@ void WatchWinder::HandleWatchesJSON()
 
 void WatchWinder::HandleWatchesSaveJSON()
 {
-	// TODO
 	if (web_server_.hasArg("firstwatchname"))
     {
+		SetFirstwatchname(web_server_.arg("firstwatchname"));
     }
     if (web_server_.hasArg("firstwatchturnsperday"))
     {
+		SetFirstwatchturnsperday(web_server_.arg("firstwatchturnsperday").toInt());
     }
     if (web_server_.hasArg("firstwatchturndirection"))
     {
+		SetFirstwatchturndirection((TurningDirection)(web_server_.arg("firstwatchturndirection").toInt()));
     }
 	if (web_server_.hasArg("secondwatchname"))
     {
+		SetSecondwatchname(web_server_.arg("secondwatchname"));
     }
     if (web_server_.hasArg("secondwatchturnsperday"))
     {
+		SetSecondwatchturnsperday(web_server_.arg("secondwatchturnsperday").toInt());
     }
     if (web_server_.hasArg("secondwatchturndirection"))
     {
+		SetSecondwatchturndirection((TurningDirection)(web_server_.arg("secondwatchturndirection").toInt()));
     }
 	if (web_server_.hasArg("thirdwatchname"))
     {
+		SetThirdwatchname(web_server_.arg("thirdwatchname"));
     }
     if (web_server_.hasArg("thirdwatchturnsperday"))
     {
+		SetThirdwatchturnsperday(web_server_.arg("thirdwatchturnsperday").toInt());
     }
     if (web_server_.hasArg("thirdwatchturndirection"))
     {
+		SetThirdwatchturndirection((TurningDirection)(web_server_.arg("thirdwatchturndirection").toInt()));
     }
 	web_server_.send( 200, "text/json", "true");
 }
@@ -258,7 +266,7 @@ void WatchWinder::HandleWatchesResetJSON()
 void WatchWinder::HandleRestartESPJSON()
 {
     web_server_.send( 200, "text/json", "true");
-    ESP.reset();
+    ESP.restart();
 }
 
 void WatchWinder::ReadConfig()
@@ -348,7 +356,7 @@ void WatchWinder::SetupWifiManager()
     // sets timeout until configuration portal gets turned off
     // useful to make it all retry or go to sleep
     // in seconds
-    //wifi_manager_.setTimeout(120);
+    wifi_manager_.setTimeout(120);
 
     // fetches ssid and pass and tries to connect
     // if it does not connect it starts an access point with the specified name
@@ -359,7 +367,7 @@ void WatchWinder::SetupWifiManager()
         Serial.println("failed to connect and hit timeout");
         delay(3000);
         // reset and try again, or maybe put it to deep sleep
-        ESP.reset();
+        ESP.restart();
         delay(5000);
     }
 
@@ -405,7 +413,7 @@ void WatchWinder::SetupMovement()
 void WatchWinder::SetupNTPClient()
 {
     NTP.init((char *)"de.pool.ntp.org", UTC0100); // hardcoded: German NTP Server, Central European Time (CET = UTC + 01:00)
-    NTP.setPollingInterval(60); // Poll every minute
+    NTP.setPollingInterval(60*5); // Poll every 5 minutes
 
     NTP.onSyncEvent([](NTPSyncEvent_t ntpEvent)
     {
@@ -486,16 +494,233 @@ void WatchWinder::ApplyTimesettings()
 
 String WatchWinder::GetWatchesJSON()
 {
+	
 	String json = "{";
-    json += "\"firstwatchname\":"   + (String)(int)0 + ",";
-    json += "\"firstwatchturnsperday\":" + (String)(int)0 + ",";
-    json += "\"firstwatchturndirection\":"   + (String)(int)0 + ",";
-    json += "\"secondwatchname\":"   + (String)(int)0 + ",";
-    json += "\"secondwatchturnsperday\":" + (String)(int)0 + ",";
-    json += "\"secondwatchturndirection\":"   + (String)(int)0 + ",";
-    json += "\"thirdwatchname\":"   + (String)(int)0 + ",";
-    json += "\"thirdwatchturnsperday\":" + (String)(int)0 + ",";
-    json += "\"thirdwatchturndirection\":"   + (String)(int)0 + "}";
+    json += "\"firstwatchname\":\""   		+ (String)GetFirstwatchname() 			+ "\",";
+    json += "\"firstwatchturnsperday\":" 	+ (String)GetFirstwatchturnsperday() 	+ ",";
+    json += "\"firstwatchturndirection\":"  + (String)GetFirstwatchturndirection() 	+ ",";
+    json += "\"secondwatchname\":\""   		+ (String)GetSecondwatchname() 			+ "\",";
+    json += "\"secondwatchturnsperday\":" 	+ (String)GetSecondwatchturnsperday() 	+ ",";
+    json += "\"secondwatchturndirection\":" + (String)GetSecondwatchturndirection() + ",";
+    json += "\"thirdwatchname\":\""   		+ (String)GetThirdwatchname() 			+ "\",";
+    json += "\"thirdwatchturnsperday\":" 	+ (String)GetThirdwatchturnsperday() 	+ ",";
+    json += "\"thirdwatchturndirection\":"  + (String)GetThirdwatchturndirection() 	+ "}";
     
     return json;
+}
+
+String WatchWinder::GetFirstwatchname()
+{
+	String empty_name = "First Watch";
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
+		{
+			return (String)(watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.GetName());
+		}
+	}
+	return empty_name;
+}
+
+int WatchWinder::GetFirstwatchturnsperday()
+{
+	int revolutions_per_day = 720; // Default
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
+		{
+			return (int)(watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.GetRevolutionsPerDay());
+		}
+	}
+	return revolutions_per_day;
+}
+
+TurningDirection WatchWinder::GetFirstwatchturndirection()
+{
+	TurningDirection turning_direction = BOTHDIRECTIONS; // Default
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
+		{
+			return (TurningDirection)(watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.GetTurningDirection());
+		}
+	}
+	return turning_direction;
+}
+
+String WatchWinder::GetSecondwatchname()
+{
+	String empty_name = "Second Watch";
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
+		{
+			return (String)(watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.GetName());
+		}
+	}
+	return empty_name;
+}
+
+int WatchWinder::GetSecondwatchturnsperday()
+{
+	int revolutions_per_day = 720; // Default
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
+		{
+			return (int)(watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.GetRevolutionsPerDay());
+		}
+	}
+	return revolutions_per_day;
+}
+
+TurningDirection WatchWinder::GetSecondwatchturndirection()
+{
+	TurningDirection turning_direction = BOTHDIRECTIONS; // Default
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
+		{
+			return (TurningDirection)(watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.GetTurningDirection());
+		}
+	}
+	return turning_direction;
+}
+
+String WatchWinder::GetThirdwatchname()
+{
+	String empty_name = "Third Watch";
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
+		{
+			return (String)(watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.GetName());
+		}
+	}
+	return empty_name;
+}
+
+int WatchWinder::GetThirdwatchturnsperday()
+{
+	int revolutions_per_day = 720; // Default
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
+		{
+			return (int)(watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.GetRevolutionsPerDay());
+		}
+	}
+	return revolutions_per_day;
+}
+
+TurningDirection WatchWinder::GetThirdwatchturndirection()
+{
+	TurningDirection turning_direction = BOTHDIRECTIONS; // Default
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
+		{
+			return (TurningDirection)(watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.GetTurningDirection());
+		}
+	}
+	return turning_direction;
+}
+
+void WatchWinder::SetFirstwatchname(String name)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.SetName(name);
+		}
+	}
+}
+
+void WatchWinder::SetFirstwatchturnsperday(int revolutions_per_day)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.SetRevolutionsPerDay(revolutions_per_day);
+		}
+	}
+}
+
+void WatchWinder::SetFirstwatchturndirection(TurningDirection turning_direction)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.SetTurningDirection(turning_direction);
+		}
+	}
+}
+
+void WatchWinder::SetSecondwatchname(String name)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.SetName(name);
+		}
+	}
+}
+
+void WatchWinder::SetSecondwatchturnsperday(int revolutions_per_day)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.SetRevolutionsPerDay(revolutions_per_day);
+		}
+	}
+}
+
+void WatchWinder::SetSecondwatchturndirection(TurningDirection turning_direction)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.SetTurningDirection(turning_direction);
+		}
+	}
+}
+
+void WatchWinder::SetThirdwatchname(String name)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.SetName(name);
+		}
+	}
+}
+
+void WatchWinder::SetThirdwatchturnsperday(int revolutions_per_day)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.SetRevolutionsPerDay(revolutions_per_day);
+		}
+	}
+}
+
+void WatchWinder::SetThirdwatchturndirection(TurningDirection turning_direction)
+{
+	if (watch_movement_suppliers_.size() > 0)
+	{
+		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
+		{
+			watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.SetTurningDirection(turning_direction);
+		}
+	}
 }
