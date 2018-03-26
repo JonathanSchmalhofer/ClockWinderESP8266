@@ -1,0 +1,86 @@
+<!Doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=0.8, minimal-ui">
+        <meta name="description" content="ESP8266 Watch Winder">
+        <meta name="author" content="Jonathan Bryan Schmalhofer">
+        <meta name="theme-color" content="#36393E" />
+        <title>ESP8266 Watch Winder</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="js/functions.js"></script>
+    </head>
+    <body>
+        <nav>
+            <a href="watches.html">Watches</a>
+            <a href="settings.html">Settings</a>
+			<a class="right" href="info.html">Info</a>
+        </nav>
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    
+                    <div id="error" class="hide"></div>
+                    
+                    <h1 class="header">Settings</h1>
+                    <h2>Time Zone</h2>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="timezoneshift" class="labelFix">Relative to UTC (in hours)</label>
+                </div>
+                <div class="col-6">
+                    <input type="number" id="timezoneshift" min="-12" max="14"> h
+                </div>
+            </div>
+            
+            
+            <div class="row">
+                <div class="col-12">
+                    <h2>Allowed Time for Active Watch Winder</h2>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="earliestallowed" class="labelFix">Earliest Start (only full hours - 0 to 24)</label>
+                </div>
+                <div class="col-6">
+                    <input type="number" id="earliestallowed" min="0" max="24" onchange="document.getElementById('latestallowed').min=this.value; if (document.getElementById('latestallowed').value < this.value) { document.getElementById('latestallowed').value = this.value; };"> h
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="latestallowed" class="labelFix">Latest Start (only full hours - 0 to 24)</label>
+                </div>
+                <div class="col-6">
+                    <input type="number" id="latestallowed" min="document.getElementById('earliestallowed').value" max="24"> h
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <br />
+                    <button class="red" onclick="resettimesettings()">reset</button> 
+                    <!--- <button class="red" onclick="restart()">restart</button> -->
+                    <button class="button-primary right" onclick="savetimesettings()">save</button>
+                    <br class="clear" />
+                    <p id="saved"></p>
+                    <br class="clear" />
+
+                    <div id="copyright">
+                        Version 0.3<br />
+                        Copyright (c) 2018 Jonathan Bryan Schmalhofer<br />
+                        <a href="https://github.com/JonathanSchmalhofer" target="_blank">github.com/JonathanSchmalhofer</a>
+                    </div>
+                        
+                    <script src="js/timesettings.js"></script>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

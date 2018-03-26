@@ -1,0 +1,437 @@
+<!Doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=0.8, minimal-ui">
+        <meta name="description" content="ESP8266 Watch Winder">
+        <meta name="author" content="Jonathan Bryan Schmalhofer">
+        <meta name="theme-color" content="#36393E" />
+        <title>ESP8266 Watch Winder</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="js/functions.js"></script>
+    </head>
+    <body>
+        <nav>
+            <a href="watches.html">Watches</a>
+            <a href="settings.html">Settings</a>
+			<a class="right" href="info.html">Info</a>
+        </nav>
+        <div align="center">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    
+                    <div id="error" class="hide"></div>
+                    
+                    <h1 class="header">Watches</h1>
+                    <h2>First Watch</h2>
+                </div>
+            </div>
+            
+            <div align="center">
+				<svg
+				   xmlns:dc="http://purl.org/dc/elements/1.1/"
+				   xmlns:cc="http://creativecommons.org/ns#"
+				   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+				   xmlns:svg="http://www.w3.org/2000/svg"
+				   xmlns="http://www.w3.org/2000/svg"
+				   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+				   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+				   width="200"
+				   height="100"
+				   viewBox="0 0 52.916665 26.458334"
+				   version="1.1"
+				   id="svg1496"
+				   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+				   sodipodi:docname="Icon_Watchwinder_first.svg">
+				  <defs
+					 id="defs1490" />
+				  <sodipodi:namedview
+					 id="base"
+					 pagecolor="#ffffff"
+					 bordercolor="#666666"
+					 borderopacity="1.0"
+					 inkscape:pageopacity="0.0"
+					 inkscape:pageshadow="2"
+					 inkscape:zoom="5.6"
+					 inkscape:cx="78.529863"
+					 inkscape:cy="38.490808"
+					 inkscape:document-units="mm"
+					 inkscape:current-layer="layer1"
+					 showgrid="false"
+					 units="px"
+					 inkscape:window-width="2736"
+					 inkscape:window-height="1699"
+					 inkscape:window-x="-13"
+					 inkscape:window-y="-13"
+					 inkscape:window-maximized="1" />
+				  <metadata
+					 id="metadata1493">
+					<rdf:RDF>
+					  <cc:Work
+						 rdf:about="">
+						<dc:format>image/svg+xml</dc:format>
+						<dc:type
+						   rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+						<dc:title />
+					  </cc:Work>
+					</rdf:RDF>
+				  </metadata>
+				  <g
+					 inkscape:label="Ebene 1"
+					 inkscape:groupmode="layer"
+					 id="layer1"
+					 transform="translate(0,-270.54165)">
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041"
+					   cx="42.662479"
+					   cy="282.68365"
+					   r="6.9000225" />
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-7"
+					   cx="5.3932548"
+					   cy="287.20804"
+					   r="2.3839412" />
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-8"
+					   cx="28.374966"
+					   cy="282.68365"
+					   r="6.9000225" />
+					<circle
+					   style="fill:none;fill-opacity:1;stroke:#2f3136;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-8-7"
+					   cx="14.087456"
+					   cy="282.68365"
+					   r="6.9000225" />
+					<text
+					   xml:space="preserve"
+					   style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#2f3136;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+					   x="11.065252"
+					   y="286.41666"
+					   id="text2166"><tspan
+						 sodipodi:role="line"
+						 id="tspan2164"
+						 x="11.065252"
+						 y="286.41666"
+						 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#2f3136;fill-opacity:1;stroke-width:0.26458332">1</tspan></text>
+				  </g>
+				</svg>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="firstwatchname" class="labelFix">Name of Watch</label>
+                </div>
+                <div class="col-6">
+                    <input type="text" id="firstwatchname"> (e.g. Brand or Model)
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="firstwatchturnsperday" class="labelFix">Number of Turns per Day</label>
+                </div>
+                <div class="col-6">
+                    <input type="number" id="firstwatchturnsperday" min="0" max="1440"> Revolutions
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="firstwatchturndirection" class="labelFix">Required Turning Direction</label>
+                </div>
+                <div class="col-6">
+                    <select name="firstwatchturndirection">
+                        <option value="clockwise">Clockwise</option>
+                        <option value="counterclockwise">Counter Clockwise</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <h2>Second Watch</h2>
+                </div>
+            </div>
+            
+            <div align="center">            
+				<svg
+				   xmlns:dc="http://purl.org/dc/elements/1.1/"
+				   xmlns:cc="http://creativecommons.org/ns#"
+				   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+				   xmlns:svg="http://www.w3.org/2000/svg"
+				   xmlns="http://www.w3.org/2000/svg"
+				   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+				   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+				   width="200"
+				   height="100"
+				   viewBox="0 0 52.916665 26.458334"
+				   version="1.1"
+				   id="svg1496"
+				   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+				   sodipodi:docname="Icon_Watchwinder_second.svg">
+				  <defs
+					 id="defs1490" />
+				  <sodipodi:namedview
+					 id="base"
+					 pagecolor="#ffffff"
+					 bordercolor="#666666"
+					 borderopacity="1.0"
+					 inkscape:pageopacity="0.0"
+					 inkscape:pageshadow="2"
+					 inkscape:zoom="5.6"
+					 inkscape:cx="49.450454"
+					 inkscape:cy="27.028519"
+					 inkscape:document-units="mm"
+					 inkscape:current-layer="layer1"
+					 showgrid="false"
+					 units="px"
+					 inkscape:window-width="2736"
+					 inkscape:window-height="1699"
+					 inkscape:window-x="-13"
+					 inkscape:window-y="-13"
+					 inkscape:window-maximized="1" />
+				  <metadata
+					 id="metadata1493">
+					<rdf:RDF>
+					  <cc:Work
+						 rdf:about="">
+						<dc:format>image/svg+xml</dc:format>
+						<dc:type
+						   rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+						<dc:title />
+					  </cc:Work>
+					</rdf:RDF>
+				  </metadata>
+				  <g
+					 inkscape:label="Ebene 1"
+					 inkscape:groupmode="layer"
+					 id="layer1"
+					 transform="translate(0,-270.54165)">
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041"
+					   cx="42.662479"
+					   cy="282.68365"
+					   r="6.9000225" />
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-7"
+					   cx="5.3932548"
+					   cy="287.20804"
+					   r="2.3839412" />
+					<circle
+					   style="fill:none;fill-opacity:1;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-8-7"
+					   cx="14.087456"
+					   cy="282.68365"
+					   r="6.9000225" />
+					<text
+					   xml:space="preserve"
+					   style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#2f3136;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+					   x="25.352757"
+					   y="286.41666"
+					   id="text2166"><tspan
+						 sodipodi:role="line"
+						 id="tspan2164"
+						 x="25.352757"
+						 y="286.41666"
+						 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#2f3136;fill-opacity:1;stroke-width:0.26458332">2</tspan></text>
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#2f3136;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-8"
+					   cx="28.374966"
+					   cy="282.68365"
+					   r="6.9000225" />
+				  </g>
+				</svg>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="secondwatchname" class="labelFix">Name of Watch</label>
+                </div>
+                <div class="col-6">
+                    <input type="text" id="secondwatchname"> (e.g. Brand or Model)
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="secondwatchturnsperday" class="labelFix">Number of Turns per Day</label>
+                </div>
+                <div class="col-6">
+                    <input type="number" id="secondwatchturnsperday" min="0" max="1440"> Revolutions
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="secondwatchturndirection" class="labelFix">Required Turning Direction</label>
+                </div>
+                <div class="col-6">
+                    <select name="secondwatchturndirection">
+                        <option value="clockwise">Clockwise</option>
+                        <option value="counterclockwise">Counter Clockwise</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <h2>Third Watch</h2>
+                </div>
+            </div>
+            
+            <div align="center">
+				<svg
+				   xmlns:dc="http://purl.org/dc/elements/1.1/"
+				   xmlns:cc="http://creativecommons.org/ns#"
+				   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+				   xmlns:svg="http://www.w3.org/2000/svg"
+				   xmlns="http://www.w3.org/2000/svg"
+				   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+				   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+				   width="200"
+				   height="100"
+				   viewBox="0 0 52.916665 26.458334"
+				   version="1.1"
+				   id="svg1496"
+				   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+				   sodipodi:docname="Icon_Watchwinder_third.svg">
+				  <defs
+					 id="defs1490" />
+				  <sodipodi:namedview
+					 id="base"
+					 pagecolor="#ffffff"
+					 bordercolor="#666666"
+					 borderopacity="1.0"
+					 inkscape:pageopacity="0.0"
+					 inkscape:pageshadow="2"
+					 inkscape:zoom="5.6"
+					 inkscape:cx="49.450454"
+					 inkscape:cy="27.028519"
+					 inkscape:document-units="mm"
+					 inkscape:current-layer="layer1"
+					 showgrid="false"
+					 units="px"
+					 inkscape:window-width="2736"
+					 inkscape:window-height="1699"
+					 inkscape:window-x="-13"
+					 inkscape:window-y="-13"
+					 inkscape:window-maximized="1" />
+				  <metadata
+					 id="metadata1493">
+					<rdf:RDF>
+					  <cc:Work
+						 rdf:about="">
+						<dc:format>image/svg+xml</dc:format>
+						<dc:type
+						   rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+						<dc:title />
+					  </cc:Work>
+					</rdf:RDF>
+				  </metadata>
+				  <g
+					 inkscape:label="Ebene 1"
+					 inkscape:groupmode="layer"
+					 id="layer1"
+					 transform="translate(0,-270.54165)">
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-7"
+					   cx="5.3932548"
+					   cy="287.20804"
+					   r="2.3839412" />
+					<circle
+					   style="fill:none;fill-opacity:1;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-8-7"
+					   cx="14.087456"
+					   cy="282.68365"
+					   r="6.9000225" />
+					<text
+					   xml:space="preserve"
+					   style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#2f3136;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+					   x="39.64027"
+					   y="286.41666"
+					   id="text2166"><tspan
+						 sodipodi:role="line"
+						 id="tspan2164"
+						 x="39.64027"
+						 y="286.41666"
+						 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Arial;-inkscape-font-specification:Arial;fill:#2f3136;fill-opacity:1;stroke-width:0.26458332">3</tspan></text>
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#bfbfbb;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041-8"
+					   cx="28.374966"
+					   cy="282.68365"
+					   r="6.9000225" />
+					<circle
+					   style="fill:#4fadff;fill-opacity:0;stroke:#2f3136;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+					   id="path2041"
+					   cx="42.662479"
+					   cy="282.68365"
+					   r="6.9000225" />
+				  </g>
+				</svg>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="thirdwatchname" class="labelFix">Name of Watch</label>
+                </div>
+                <div class="col-6">
+                    <input type="text" id="thirdwatchname"> (e.g. Brand or Model)
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="thirdwatchturnsperday" class="labelFix">Number of Turns per Day</label>
+                </div>
+                <div class="col-6">
+                    <input type="number" id="thirdwatchturnsperday" min="0" max="1440"> Revolutions
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-6">
+                    <label for="thirdwatchturndirection" class="labelFix">Required Turning Direction</label>
+                </div>
+                <div class="col-6">
+                    <select name="thirdwatchturndirection">
+                        <option value="clockwise">Clockwise</option>
+                        <option value="counterclockwise">Counter Clockwise</option>
+                        <option value="both">Both</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <br />
+                    <button class="red" onclick="resetwatches()">reset</button> 
+                    <!--- <button class="red" onclick="restart()">restart</button> -->
+                    <button class="button-primary right" onclick="savewatches()">save</button>
+                    <br class="clear" />
+                    <p id="saved"></p>
+                    <br class="clear" />
+
+                    <div id="copyright">
+                        Version 0.3<br />
+                        Copyright (c) 2018 Jonathan Bryan Schmalhofer<br />
+                        <a href="https://github.com/JonathanSchmalhofer" target="_blank">github.com/JonathanSchmalhofer</a>
+                    </div>
+                        
+                    <script src="js/watches.js"></script>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
