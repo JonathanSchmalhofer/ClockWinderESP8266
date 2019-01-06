@@ -127,7 +127,7 @@
                     <label for="firstwatchname" class="labelFix">Name of Watch</label>
                 </div>
                 <div class="col-6">
-                    <input type="text" id="firstwatchname"> (e.g. Brand or Model)
+                    <input type="text" id="firstwatchname" /> (e.g. Brand or Model)
                 </div>
             </div>
             
@@ -136,7 +136,7 @@
                     <label for="firstwatchturnsperday" class="labelFix">Number of Turns per Day</label>
                 </div>
                 <div class="col-6">
-                    <input type="number" id="firstwatchturnsperday" min="0" max="1440"> Revolutions
+                    <input type="number" id="firstwatchturnsperday" min="0" max="1440" /> Revolutions
                 </div>
             </div>
             
@@ -145,10 +145,10 @@
                     <label for="firstwatchturndirection" class="labelFix">Required Turning Direction</label>
                 </div>
                 <div class="col-6">
-                    <select name="firstwatchturndirection">
-                        <option value="clockwise">Clockwise</option>
-                        <option value="counterclockwise">Counter Clockwise</option>
-                        <option value="both">Both</option>
+                    <select id="firstwatchturndirection">
+                        <option value="0">Clockwise</option>
+                        <option value="1">Counter Clockwise</option>
+                        <option value="2">Both</option>
                     </select>
                 </div>
             </div>
@@ -257,7 +257,7 @@
                     <label for="secondwatchname" class="labelFix">Name of Watch</label>
                 </div>
                 <div class="col-6">
-                    <input type="text" id="secondwatchname"> (e.g. Brand or Model)
+                    <input type="text" id="secondwatchname" /> (e.g. Brand or Model)
                 </div>
             </div>
             
@@ -275,10 +275,10 @@
                     <label for="secondwatchturndirection" class="labelFix">Required Turning Direction</label>
                 </div>
                 <div class="col-6">
-                    <select name="secondwatchturndirection">
-                        <option value="clockwise">Clockwise</option>
-                        <option value="counterclockwise">Counter Clockwise</option>
-                        <option value="both">Both</option>
+                    <select id="secondwatchturndirection">
+                        <option value="0">Clockwise</option>
+                        <option value="1">Counter Clockwise</option>
+                        <option value="2">Both</option>
                     </select>
                 </div>
             </div>
@@ -405,10 +405,10 @@
                     <label for="thirdwatchturndirection" class="labelFix">Required Turning Direction</label>
                 </div>
                 <div class="col-6">
-                    <select name="thirdwatchturndirection">
-                        <option value="clockwise">Clockwise</option>
-                        <option value="counterclockwise">Counter Clockwise</option>
-                        <option value="both">Both</option>
+                    <select id="thirdwatchturndirection">
+                        <option value="0">Clockwise</option>
+                        <option value="1">Counter Clockwise</option>
+                        <option value="2">Both</option>
                     </select>
                 </div>
             </div>

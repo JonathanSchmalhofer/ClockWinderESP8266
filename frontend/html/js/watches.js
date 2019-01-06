@@ -13,20 +13,20 @@ var res;
 function getData() {
     getResponse("watches.json", function(responseText) {
         try {
-            res = JSON.parse(responseText);
+            res = JSON.parse(responsetext);
         } catch(e) {
             showMessage("Error: reset the watches setting.");
             return;
         }
         firstwatchname.value = res.firstwatchname;
         firstwatchturnsperday.value = res.firstwatchturnsperday;
-        firstwatchturndirection.value = res.firstwatchturndirection;
+        firstwatchturndirection.selectedIndex = res.firstwatchturndirection;
         secondwatchname.value = res.secondwatchname;
         secondwatchturnsperday.value = res.secondwatchturnsperday;
-        secondwatchturndirection.value = res.secondwatchturndirection;
+        secondwatchturndirection.selectedIndex = res.secondwatchturndirection;
         thirdwatchname.value = res.thirdwatchname;
         thirdwatchturnsperday.value = res.thirdwatchturnsperday;
-        thirdwatchturndirection.value = res.thirdwatchturndirection;
+        thirdwatchturndirection.selectedIndex = res.thirdwatchturndirection;
     });
 }
 
@@ -35,13 +35,13 @@ function savewatches() {
     var url = "watchesSave.json";
     url += "?firstwatchname=" + firstwatchname.value;
     url += "&firstwatchturnsperday=" + firstwatchturnsperday.value;
-    url += "&firstwatchturndirection=" + firstwatchturndirection.value;
+    url += "&firstwatchturndirection=" + firstwatchturndirection.selectedIndex;
     url += "&secondwatchname=" + secondwatchname.value;
     url += "&secondwatchturnsperday=" + secondwatchturnsperday.value;
-    url += "&secondwatchturndirection=" + secondwatchturndirection.value;
+    url += "&secondwatchturndirection=" + secondwatchturndirection.selectedIndex;
     url += "&thirdwatchname=" + thirdwatchname.value;
     url += "&thirdwatchturnsperday=" + thirdwatchturnsperday.value;
-    url += "&thirdwatchturndirection=" + thirdwatchturndirection.value;
+    url += "&thirdwatchturndirection=" + thirdwatchturndirection.selectedIndex;
 
     getResponse(url, function(responseText) {
         if (responseText == "true") {
