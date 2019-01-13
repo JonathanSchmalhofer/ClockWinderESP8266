@@ -24,6 +24,7 @@ WatchWinder::WatchWinder()
 void WatchWinder::Setup()
 {
     Serial.println("###################################################");
+    Serial.println("### Running WatchWinder Setup");
 
     SetupWifiManager();
     SetupMovement();
@@ -106,6 +107,7 @@ void WatchWinder::SendFile(int code, String type, const char* adr, size_t len)
     web_server_.sendContent_P(adr,len);
     SendBuffer();
 }
+
 void WatchWinder::SendHeader(int code, String type, size_t _size)
 {
     web_server_.setContentLength(_size);
@@ -135,7 +137,7 @@ void WatchWinder::SendToBuffer(String str)
 
 void WatchWinder::HandleRoot()
 {
-    SendFile(200, "text/html", data_watchesHTML, sizeof(data_watchesHTML));
+    HandleWatchesHTML();
 }
 
 void WatchWinder::HandleSettingsHTML()
@@ -254,18 +256,28 @@ void WatchWinder::HandleWatchesSaveJSON()
     {
 		SetThirdwatchturndirection((TurningDirection)(web_server_.arg("thirdwatchturndirection").toInt()));
     }
-	web_server_.send( 200, "text/json", "true");
+	web_server_.send(200, "text/json", "true");
 }
 
 void WatchWinder::HandleWatchesResetJSON()
 {
-	// Dummy send - to be deleted
-	web_server_.send( 200, "text/json", "true");
+	SetFirstwatchname("First Watch");
+    SetFirstwatchturnsperday(720);
+    SetFirstwatchturndirection(BOTHDIRECTIONS);
+
+    SetSecondwatchname("Second Watch");
+    SetSecondwatchturnsperday(720);
+    SetSecondwatchturndirection(BOTHDIRECTIONS);
+
+    SetThirdwatchname("Third Watch");
+    SetThirdwatchturnsperday(720);
+    SetThirdwatchturndirection(BOTHDIRECTIONS);
+	web_server_.send(200, "text/json", "true");
 }
 
 void WatchWinder::HandleRestartESPJSON()
 {
-    web_server_.send( 200, "text/json", "true");
+    web_server_.send(200, "text/json", "true");
     ESP.restart();
 }
 
@@ -286,14 +298,14 @@ void WatchWinder::ReadConfig()
         File configFile = SPIFFS.open("/config.json", "r");
         if (configFile)
         {
-            size_t size = configFile.size();
-            // Allocate a buffer to store contents of the file.
-            std::unique_ptr<char[]> buf(new char[size]);
+                size_t size = configFile.size();
+                // Allocate a buffer to store contents of the file.
+                std::unique_ptr<char[]> buf(new char[size]);
 
-            configFile.readBytes(buf.get(), size);
-            DynamicJsonBuffer jsonBuffer;
-            JsonObject& json = jsonBuffer.parseObject(buf.get());
-            json.printTo(Serial);
+                configFile.readBytes(buf.get(), size);
+                DynamicJsonBuffer jsonBuffer;
+                JsonObject& json = jsonBuffer.parseObject(buf.get());
+                json.printTo(Serial);
                 if (json.success())
                 {
                     strcpy(mqtt_server_, json["mqtt_server"]);
@@ -367,6 +379,8 @@ void WatchWinder::SetupWifiManager()
         Serial.println("failed to connect and hit timeout");
         delay(3000);
         // reset and try again, or maybe put it to deep sleep
+        wifi_manager_.resetSettings();
+        Serial.println("resetting wifi manager and restarting ESP8266");
         ESP.restart();
         delay(5000);
     }
@@ -496,15 +510,15 @@ String WatchWinder::GetWatchesJSON()
 {
 	
 	String json = "{";
-    json += "\"firstwatchname\":\""   		+ (String)GetFirstwatchname() 			+ "\",";
-    json += "\"firstwatchturnsperday\":" 	+ (String)GetFirstwatchturnsperday() 	+ ",";
-    json += "\"firstwatchturndirection\":"  + (String)GetFirstwatchturndirection() 	+ ",";
-    json += "\"secondwatchname\":\""   		+ (String)GetSecondwatchname() 			+ "\",";
-    json += "\"secondwatchturnsperday\":" 	+ (String)GetSecondwatchturnsperday() 	+ ",";
-    json += "\"secondwatchturndirection\":" + (String)GetSecondwatchturndirection() + ",";
-    json += "\"thirdwatchname\":\""   		+ (String)GetThirdwatchname() 			+ "\",";
-    json += "\"thirdwatchturnsperday\":" 	+ (String)GetThirdwatchturnsperday() 	+ ",";
-    json += "\"thirdwatchturndirection\":"  + (String)GetThirdwatchturndirection() 	+ "}";
+    json += "\"firstwatchname\":\""   		  + (String)GetFirstwatchname() 			+ "\",";
+    json += "\"firstwatchturnsperday\":" 	  + (String)GetFirstwatchturnsperday() 	    + ",";
+    json += "\"firstwatchturndirection\":\""  + (String)GetFirstwatchturndirection() 	+ "\",";
+    json += "\"secondwatchname\":\""   		  + (String)GetSecondwatchname() 			+ "\",";
+    json += "\"secondwatchturnsperday\":" 	  + (String)GetSecondwatchturnsperday() 	+ ",";
+    json += "\"secondwatchturndirection\":\"" + (String)GetSecondwatchturndirection()   + "\",";
+    json += "\"thirdwatchname\":\""   		  + (String)GetThirdwatchname() 			+ "\",";
+    json += "\"thirdwatchturnsperday\":" 	  + (String)GetThirdwatchturnsperday() 	    + ",";
+    json += "\"thirdwatchturndirection\":\""  + (String)GetThirdwatchturndirection() 	+ "\"}";
     
     return json;
 }
@@ -633,6 +647,7 @@ void WatchWinder::SetFirstwatchname(String name)
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.SetName(name);
+			Serial.println("SetFirstwatchname() SUCCESS");
 		}
 	}
 }
@@ -644,6 +659,7 @@ void WatchWinder::SetFirstwatchturnsperday(int revolutions_per_day)
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.SetRevolutionsPerDay(revolutions_per_day);
+			Serial.println("SetFirstwatchturnsperday() SUCCESS");
 		}
 	}
 }
@@ -655,6 +671,7 @@ void WatchWinder::SetFirstwatchturndirection(TurningDirection turning_direction)
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 0)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(0).first.SetTurningDirection(turning_direction);
+			Serial.println("SetFirstwatchturndirection() SUCCESS");
 		}
 	}
 }
@@ -666,6 +683,7 @@ void WatchWinder::SetSecondwatchname(String name)
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.SetName(name);
+			Serial.println("SetSecondwatchname() SUCCESS");
 		}
 	}
 }
@@ -677,6 +695,7 @@ void WatchWinder::SetSecondwatchturnsperday(int revolutions_per_day)
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.SetRevolutionsPerDay(revolutions_per_day);
+			Serial.println("SetSecondwatchturnsperday() SUCCESS");
 		}
 	}
 }
@@ -688,6 +707,7 @@ void WatchWinder::SetSecondwatchturndirection(TurningDirection turning_direction
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 1)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(1).first.SetTurningDirection(turning_direction);
+			Serial.println("SetSecondwatchturndirection() SUCCESS");
 		}
 	}
 }
@@ -699,6 +719,7 @@ void WatchWinder::SetThirdwatchname(String name)
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.SetName(name);
+			Serial.println("SetThirdwatchname() SUCCESS");
 		}
 	}
 }
@@ -710,6 +731,7 @@ void WatchWinder::SetThirdwatchturnsperday(int revolutions_per_day)
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.SetRevolutionsPerDay(revolutions_per_day);
+			Serial.println("SetThirdwatchturnsperday() SUCCESS");
 		}
 	}
 }
@@ -721,6 +743,7 @@ void WatchWinder::SetThirdwatchturndirection(TurningDirection turning_direction)
 		if (watch_movement_suppliers_.at(0).GetAllRequirements().size() > 2)
 		{
 			watch_movement_suppliers_.at(0).GetAllRequirements().at(2).first.SetTurningDirection(turning_direction);
+			Serial.println("SetThirdwatchturndirection() SUCCESS");
 		}
 	}
 }

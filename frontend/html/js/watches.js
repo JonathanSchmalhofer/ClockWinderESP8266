@@ -13,7 +13,7 @@ var res;
 function getData() {
     getResponse("watches.json", function(responseText) {
         try {
-            res = JSON.parse(responsetext);
+            res = JSON.parse(responseText);
         } catch(e) {
             showMessage("Error: reset the watches setting.");
             return;
