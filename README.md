@@ -1,6 +1,8 @@
 # WatchWinderESP8266
 An ESP8266-based watch winder with browser accessible GUI for configuration.
 
+STILL WORK IN PROGRESS
+
 # Requirements
 
 The following are required in order to build this project (in case any are missing, any help in completing the list is highly appreciated):
